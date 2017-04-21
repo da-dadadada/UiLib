@@ -2,6 +2,8 @@ package individual.leobert.uilib.actionsheet;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import individual.leobert.actionsheet.R;
 
@@ -36,6 +39,8 @@ public class ActionSheet extends PopupWindow {
 
     private DefaultActionSheetAdapter defaultAdapter;
 
+    private TextView tvBrokenText;
+
     public void transparent() {
         convertView.setBackgroundResource(android.R.color.transparent);
         this.setBackgroundDrawable(null);
@@ -49,6 +54,7 @@ public class ActionSheet extends PopupWindow {
 
         listView = (ListView) convertView.findViewById(R.id.actionsheet_list);
         btnBroken = convertView.findViewById(R.id.actionsheet_btn_broken);
+        tvBrokenText = (TextView) convertView.findViewById(R.id.actionsheet_btn_broken);
         llBrokenArea = (LinearLayout) convertView.findViewById(R.id.actionsheet_ll_broken);
         defaultAdapter = new DefaultActionSheetAdapter(
                 new DefaultItemViewProvider(mActivity.getLayoutInflater(),
@@ -100,6 +106,11 @@ public class ActionSheet extends PopupWindow {
 
     public void enableBrokenButton() {
         llBrokenArea.setVisibility(View.VISIBLE);
+    }
+
+    public void enableBrokenButton(@ColorRes int colorRes) {
+        llBrokenArea.setVisibility(View.VISIBLE);
+        tvBrokenText.setTextColor(ContextCompat.getColor(mActivity, colorRes));
     }
 
 

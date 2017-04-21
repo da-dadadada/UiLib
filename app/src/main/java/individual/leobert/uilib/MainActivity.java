@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import individual.leobert.uilib.actionsheet.ActionSheet;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -44,7 +46,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showActionSheet() {
-
+        ActionSheet actionSheet = new ActionSheet(this);
+        actionSheet.enableBrokenButton();
+        actionSheet.setDatasForDefaultAdapter(new String[] {"1","2"});
+        actionSheet.transparent();
+        actionSheet.show();
     }
 
     @Override
