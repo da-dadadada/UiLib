@@ -1,0 +1,10 @@
+<resources>
+
+
+    <style name="iOSActionSheet">
+        <item name="android:windowEnterAnimation">@anim/actionsheet_in</item>
+        <item name="android:windowExitAnimation">@anim/actionsheet_out</item>
+
+    </style>
+
+</resources>
