@@ -1,1 +1,1 @@
-include ':app', ':actionsheet', ':numbadge'
+include ':app', ':actionsheet', ':numbadge', ':autolooperbanner'

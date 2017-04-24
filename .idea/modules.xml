@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/UiLib.iml" filepath="$PROJECT_DIR$/UiLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/actionsheet/actionsheet.iml" filepath="$PROJECT_DIR$/actionsheet/actionsheet.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/autolooperbanner/autolooperbanner.iml" filepath="$PROJECT_DIR$/autolooperbanner/autolooperbanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/numbadge/numbadge.iml" filepath="$PROJECT_DIR$/numbadge/numbadge.iml" />
     </modules>
   </component>
