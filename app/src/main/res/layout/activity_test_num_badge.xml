@@ -1,9 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:numbudge="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="individual.leobert.uilib.TestNumBadge">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="oval effect" />
+
+        <individual.leobert.uilib.numbadge.NumBadge
+            android:id="@+id/numbadge_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            numbudge:backgroundShape="oval" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="rectAngle effect " />
+
+        <individual.leobert.uilib.numbadge.NumBadge
+            android:id="@+id/numbadge_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            numbudge:backgroundShape="rectAngle" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="default is oval" />
+
+        <individual.leobert.uilib.numbadge.NumBadge
+            android:id="@+id/numbadge_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/numbadge_test_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test dot"/>
+
+        <Button
+            android:id="@+id/numbadge_test_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test num one"/>
+
+        <Button
+            android:id="@+id/numbadge_test_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test num 8"/>
+
+        <Button
+            android:id="@+id/numbadge_test_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test num 88"/>
+
+        <Button
+            android:id="@+id/numbadge_test_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="test num larger than 99"/>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
