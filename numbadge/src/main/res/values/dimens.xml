@@ -1,0 +1,9 @@
+<resources>
+    <dimen name="badge_minwidth_point">10dp</dimen>
+    <dimen name="badge_minwidth_small">16dp</dimen>
+    <dimen name="badge_minwidth_big">18dp</dimen>
+
+    <dimen name="badge_height_point">10dp</dimen>
+    <dimen name="badge_height_normal">16dp</dimen>
+
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NumBadge">
+        <!-- 背景是椭圆的还是圆角的 -->
+        <attr name="backgroundShape" format="enum">
+            <enum name="rectAngle" value="0" />
+            <enum name="oval" value="1" />
+        </attr>
+    </declare-styleable>
+</resources>
