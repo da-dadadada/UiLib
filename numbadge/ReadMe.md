@@ -43,11 +43,11 @@ in version 1.0.0,only "backgroundShape" attribute provided. It's an enum include
 
 	**param max**:the max num to display,if num is lager than it,will display as [MAX_BADGE_NUM]+;
 
-	e.g. use MAX_BADGE_NUM = 99,when you set 123 via #updateWithFriendlyMode(num,MAX_BADGE_NUM);  will display as 99+
+	e.g. use MAX_BADGE_NUM = 99,when you set 123 via #updateWithFriendlyMode(num,MAX_BADGE_NUM); it will displays as 99+
    
 * **public void updateWithActualMode(int num);**
 
-	display the number you give,specially use for number "1",and different form #updateWithFriendlyMode(num,MAX_BADGE_NUM) when ***num*** is lager than ***max***
+	display the number you give,specially use for number "1",and different from #updateWithFriendlyMode(int num,int max) when ***num*** is lager than ***max***
 
 * **public void clear();**
 
