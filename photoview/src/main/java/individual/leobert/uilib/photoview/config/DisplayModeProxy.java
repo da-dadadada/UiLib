@@ -1,5 +1,7 @@
 package individual.leobert.uilib.photoview.config;
 
+import android.graphics.RectF;
+
 import individual.leobert.uilib.photoview.PhotoViewAttacher;
 import individual.leobert.uilib.photoview.log.LogManager;
 
@@ -48,6 +50,16 @@ public class DisplayModeProxy implements IDisplayModeGetter, IDisplayModeProxy {
         registerHighPicDisplayModeGetter(new DefaultHighPicDisplayModeGetter());
     }
 
+    private IDisplayModeGetter chooseDisplayModeGetter(RectF pic) {
+        final float aspectRatio = pic.width()/pic.height();
+        if (aspectRatio<getOverHighAspectRatioThreshold())
+            return highPicDisplayModeGetter;
+        else if (aspectRatio>getOverWideAspectRatioThreshold())
+            return widePicDisplayModeGetter;
+        else
+            return normalPicDisplayModeGetter;
+    }
+
     /**
      * smallPhoto:both width and height of the photo are smaller than the container's
      *
@@ -76,6 +88,18 @@ public class DisplayModeProxy implements IDisplayModeGetter, IDisplayModeProxy {
     @Override
     public DisplayMode getDisplayModeForLargePhoto() {
         return null;
+    }
+
+    private DisplayMode getDisplayMode(PhotoSize size, IDisplayModeGetter modeGetter) {
+        switch (size) {
+            case small:
+                return modeGetter.getDisplayModeForSmallPhoto();
+            case large:
+                return modeGetter.getDisplayModeForLargePhoto();
+            case middle://default
+            default:
+                return modeGetter.getDisplayModeForMiddlePhoto();
+        }
     }
 
 
