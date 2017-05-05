@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="numbadge-1.0.0">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/aa55ec43d5647d67be35ebc6e238a88ad5a1535b/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/aa55ec43d5647d67be35ebc6e238a88ad5a1535b/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/individual.leobert.libs/numbadge/1.0.0/292f15da11944f5d396ab447c4a39989dcbcde54/numbadge-1.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
