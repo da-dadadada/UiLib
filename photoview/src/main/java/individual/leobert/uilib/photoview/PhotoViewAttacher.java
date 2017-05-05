@@ -176,6 +176,12 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, OnGe
         this.displayModeProxy = displayModeProxy;
     }
 
+    public void notifyProxyPhotoSet(RectF rectF) {
+        if (null != displayModeProxy) {
+            displayModeProxy.proxy(rectF);
+        }
+    }
+
     public boolean canZoom() {
         return this.mZoomEnabled;
     }

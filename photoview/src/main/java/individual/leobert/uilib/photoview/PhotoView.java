@@ -165,7 +165,6 @@ public class PhotoView extends ImageView implements IPhotoView {
         if(null != this.mAttacher) {
             this.mAttacher.update();
         }
-
     }
 
     public void setImageResource(int resId) {
@@ -274,6 +273,24 @@ public class PhotoView extends ImageView implements IPhotoView {
     protected void onAttachedToWindow() {
         this.init();
         super.onAttachedToWindow();
+    }
+
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+        super.setImageBitmap(bm);
+        if(null != this.mAttacher) {
+            this.mAttacher.update();
+        }
+        notifyProxyPhotoSet(bm);
+    }
+
+
+
+    public void notifyProxyPhotoSet(Bitmap bitmap) {
+        if (null != mAttacher) {
+            RectF rectF = new RectF(0,0,bitmap.getWidth(),bitmap.getHeight());
+            mAttacher.notifyProxyPhotoSet(rectF);
+        }
     }
 }
 
