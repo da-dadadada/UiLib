@@ -4,6 +4,7 @@ import android.graphics.RectF;
 
 import individual.leobert.uilib.photoview.PhotoViewAttacher;
 import individual.leobert.uilib.photoview.log.LogManager;
+import individual.leobert.uilib.photoview.util.ISizeComparator;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.photoview.config </p>
@@ -40,6 +41,8 @@ public class DisplayModeProxy implements IDisplayModeGetter, IDisplayModeProxy {
 
     private IDisplayModeGetter highPicDisplayModeGetter;
 
+    private ISizeComparator sizeComparator;
+
     public DisplayModeProxy(PhotoViewAttacher photoViewAttacher) {
         this.photoViewAttacher = photoViewAttacher;
         setOverHighAspectRatioThreshold(DEFAULT_OVERHIGH_ASPECT_RATIO_THRESHOLD);
@@ -48,6 +51,8 @@ public class DisplayModeProxy implements IDisplayModeGetter, IDisplayModeProxy {
         registerNormalPicDisplayModeGetter(new DefaultNormalPicDisplayModeGetter());
         registerWidePicDisplayModeGetter(new DefaultWidePicDisplayModeGetter());
         registerHighPicDisplayModeGetter(new DefaultHighPicDisplayModeGetter());
+
+        this.registerSizeComparator(new ISizeComparator.DefaultSizeComparator());
     }
 
     private IDisplayModeGetter chooseDisplayModeGetter(RectF pic) {
@@ -58,48 +63,6 @@ public class DisplayModeProxy implements IDisplayModeGetter, IDisplayModeProxy {
             return widePicDisplayModeGetter;
         else
             return normalPicDisplayModeGetter;
-    }
-
-    /**
-     * smallPhoto:both width and height of the photo are smaller than the container's
-     *
-     * @return DisplayMode see at {@link DisplayMode}
-     */
-    @Override
-    public DisplayMode getDisplayModeForSmallPhoto() {
-        return null;
-    }
-
-    /**
-     * middlePhoto:only width or height of the photo is smaller than the container's
-     *
-     * @return DisplayMode see at {@link DisplayMode}
-     */
-    @Override
-    public DisplayMode getDisplayModeForMiddlePhoto() {
-        return null;
-    }
-
-    /**
-     * largePhoto:both width and height of the photo are larger than /equals the container's
-     *
-     * @return DisplayMode see at {@link DisplayMode}
-     */
-    @Override
-    public DisplayMode getDisplayModeForLargePhoto() {
-        return null;
-    }
-
-    private DisplayMode getDisplayMode(PhotoSize size, IDisplayModeGetter modeGetter) {
-        switch (size) {
-            case small:
-                return modeGetter.getDisplayModeForSmallPhoto();
-            case large:
-                return modeGetter.getDisplayModeForLargePhoto();
-            case middle://default
-            default:
-                return modeGetter.getDisplayModeForMiddlePhoto();
-        }
     }
 
 
@@ -166,7 +129,37 @@ public class DisplayModeProxy implements IDisplayModeGetter, IDisplayModeProxy {
         this.highPicDisplayModeGetter = highPicDisplayModeGetter;
     }
 
+    @Override
+    public void registerSizeComparator(ISizeComparator iSizeComparator) {
+        if (iSizeComparator == null) {
+            LogManager.getLogger().w(TAG, "null is not allowed to be registered");
+            return;
+        }
+        this.sizeComparator = iSizeComparator;
+    }
+
+    @Override
+    public void proxy(RectF pic) {
+        RectF container = new RectF(0,0,photoViewAttacher.getImageView().getWidth(),
+                photoViewAttacher.getImageView().getHeight());
+        PhotoSize size = sizeComparator.compare(pic,container);
+        DisplayMode mode = getDisplayMode(size,pic);
+        proxy(mode);
+    }
+
     private void proxy(DisplayMode displayMode) {
         photoViewAttacher.setScaleType(DisplayMode.trans(displayMode));
+    }
+
+    /**
+     * get display mode for photo
+     *
+     * @param photoSize PhotoSize see at {@link PhotoSize}
+     * @return DisplayMode see at {@link DisplayMode}
+     */
+    @Override
+    public DisplayMode getDisplayMode(PhotoSize photoSize,RectF pic) {
+        IDisplayModeGetter modeGetter = chooseDisplayModeGetter(pic);
+        return modeGetter.getDisplayMode(photoSize,pic);
     }
 }

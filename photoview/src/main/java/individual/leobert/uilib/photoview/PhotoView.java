@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.widget.ImageView;
 
+import individual.leobert.uilib.photoview.config.IDisplayModeProxy;
+
 /**
  * <p><b>Package:</b> individual.leobert.uilib.photoview </p>
  * <p><b>Project:</b> UiLib </p>
@@ -257,6 +259,11 @@ public class PhotoView extends ImageView implements IPhotoView {
 
     public void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener) {
         this.mAttacher.setOnSingleFlingListener(onSingleFlingListener);
+    }
+
+    @Override
+    public void setIDisplayModeProxy(IDisplayModeProxy displayModeProxy) {
+        mAttacher.setIDisplayModeProxy(displayModeProxy);
     }
 
     protected void onDetachedFromWindow() {

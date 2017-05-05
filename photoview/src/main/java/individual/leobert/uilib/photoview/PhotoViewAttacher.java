@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 
+import individual.leobert.uilib.photoview.config.IDisplayModeProxy;
 import individual.leobert.uilib.photoview.gestures.OnGestureListener;
 import individual.leobert.uilib.photoview.gestures.VersionedGestureDetector;
 import individual.leobert.uilib.photoview.log.LogManager;
@@ -70,6 +71,8 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, OnGe
     private float mBaseRotation;
     private boolean mZoomEnabled;
     private ImageView.ScaleType mScaleType;
+
+    private IDisplayModeProxy displayModeProxy;
 
     private static void checkZoomLevels(float minZoom, float midZoom, float maxZoom) {
         if(minZoom >= midZoom) {
@@ -166,6 +169,11 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, OnGe
 
     public void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener onSingleFlingListener) {
         this.mSingleFlingListener = onSingleFlingListener;
+    }
+
+    @Override
+    public void setIDisplayModeProxy(IDisplayModeProxy displayModeProxy) {
+        this.displayModeProxy = displayModeProxy;
     }
 
     public boolean canZoom() {
@@ -495,7 +503,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, OnGe
                 this.resetMatrix();
             }
         }
-
     }
 
     /** @deprecated */

@@ -1,5 +1,7 @@
 package individual.leobert.uilib.photoview.config;
 
+import android.graphics.RectF;
+
 /**
  * <p><b>Package:</b> individual.leobert.uilib.photoview.config </p>
  * <p><b>Project:</b> UiLib </p>
@@ -10,80 +12,75 @@ package individual.leobert.uilib.photoview.config;
 
 public interface IDisplayModeGetter {
     /**
-     * smallPhoto:both width and height of the photo are smaller than the container's
+     * get display mode for photo
+     *
+     * @param photoSize PhotoSize see at {@link PhotoSize}
      * @return DisplayMode see at {@link DisplayMode}
      */
-    DisplayMode getDisplayModeForSmallPhoto();
-
-    /**
-     * middlePhoto:only width or height of the photo is smaller than the container's
-     * @return DisplayMode see at {@link DisplayMode}
-     */
-    DisplayMode getDisplayModeForMiddlePhoto();
-
-    /**
-     * largePhoto:both width and height of the photo are larger than /equals the container's
-     * @return DisplayMode see at {@link DisplayMode}
-     */
-    DisplayMode getDisplayModeForLargePhoto();
+    DisplayMode getDisplayMode(PhotoSize photoSize, RectF pic);
 
     /**
      * a default display config for wide picture
      */
-    final class DefaultWidePicDisplayModeGetter implements IDisplayModeGetter{
-        @Override
-        public DisplayMode getDisplayModeForSmallPhoto() {
-            return null;
-        }
+    final class DefaultWidePicDisplayModeGetter implements IDisplayModeGetter {
 
+        /**
+         * get display mode for photo
+         *
+         * @param photoSize PhotoSize see at {@link PhotoSize}
+         * @param pic
+         * @return DisplayMode see at {@link DisplayMode}
+         */
         @Override
-        public DisplayMode getDisplayModeForMiddlePhoto() {
-            return null;
-        }
-
-        @Override
-        public DisplayMode getDisplayModeForLargePhoto() {
-            return null;
+        public DisplayMode getDisplayMode(PhotoSize photoSize, RectF pic) {
+            switch (photoSize) {
+                case small:
+                    return DisplayMode.CENTER;
+                case middle:
+                    return DisplayMode.FIT_CENTER;
+                case large:
+                    return DisplayMode.FIT_CENTER;
+                default:
+                    return DisplayMode.FIT_CENTER;
+            }
         }
     }
 
     /**
      * a default display config for normal picture(not wide or high pic)
      */
-    final class DefaultNormalPicDisplayModeGetter implements IDisplayModeGetter{
+    final class DefaultNormalPicDisplayModeGetter implements IDisplayModeGetter {
         @Override
-        public DisplayMode getDisplayModeForSmallPhoto() {
-            return null;
-        }
-
-        @Override
-        public DisplayMode getDisplayModeForMiddlePhoto() {
-            return null;
-        }
-
-        @Override
-        public DisplayMode getDisplayModeForLargePhoto() {
-            return null;
+        public DisplayMode getDisplayMode(PhotoSize photoSize, RectF pic) {
+            switch (photoSize) {
+                case small:
+                    return DisplayMode.CENTER;
+                case middle:
+                    return DisplayMode.FIT_CENTER;
+                case large:
+                    return DisplayMode.FIT_CENTER;
+                default:
+                    return DisplayMode.FIT_CENTER;
+            }
         }
     }
 
     /**
      * a default display config for high picture
      */
-    final class DefaultHighPicDisplayModeGetter implements IDisplayModeGetter{
+    final class DefaultHighPicDisplayModeGetter implements IDisplayModeGetter {
         @Override
-        public DisplayMode getDisplayModeForSmallPhoto() {
-            return null;
-        }
-
-        @Override
-        public DisplayMode getDisplayModeForMiddlePhoto() {
-            return null;
-        }
-
-        @Override
-        public DisplayMode getDisplayModeForLargePhoto() {
-            return null;
+        public DisplayMode getDisplayMode(PhotoSize photoSize, RectF pic) {
+            switch (photoSize) {
+                case small:
+                    return DisplayMode.CENTER;
+                case middle:
+                    return DisplayMode.FIT_CENTER;
+                case large:
+                    return DisplayMode.FIT_CENTER;
+                default:
+                    return DisplayMode.FIT_CENTER;
+            }
         }
     }
 }

@@ -7,6 +7,8 @@ import android.view.GestureDetector;
 import android.view.View;
 import android.widget.ImageView;
 
+import individual.leobert.uilib.photoview.config.IDisplayModeProxy;
+
 /**
  * <p><b>Package:</b> individual.leobert.uilib.photoview </p>
  * <p><b>Project:</b> UiLib </p>
@@ -92,4 +94,6 @@ public interface IPhotoView {
     void setOnScaleChangeListener(PhotoViewAttacher.OnScaleChangeListener var1);
 
     void setOnSingleFlingListener(PhotoViewAttacher.OnSingleFlingListener var1);
+
+    void setIDisplayModeProxy(IDisplayModeProxy displayModeProxy);
 }

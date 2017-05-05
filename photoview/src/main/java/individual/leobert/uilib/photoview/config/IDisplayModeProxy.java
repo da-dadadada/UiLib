@@ -1,5 +1,9 @@
 package individual.leobert.uilib.photoview.config;
 
+import android.graphics.RectF;
+
+import individual.leobert.uilib.photoview.util.ISizeComparator;
+
 /**
  * <p><b>Package:</b> individual.leobert.uilib.photoview.config </p>
  * <p><b>Project:</b> UiLib </p>
@@ -36,5 +40,9 @@ public interface IDisplayModeProxy {
     void registerWidePicDisplayModeGetter(IDisplayModeGetter widePicDisplayModeGetter);
 
     void registerHighPicDisplayModeGetter(IDisplayModeGetter highPicDisplayModeGetter);
+
+    void registerSizeComparator(ISizeComparator iSizeComparator);
+
+    void proxy(RectF pic);
 
 }
