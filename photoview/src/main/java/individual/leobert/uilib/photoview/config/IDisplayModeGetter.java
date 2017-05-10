@@ -37,11 +37,11 @@ public interface IDisplayModeGetter {
                 case small:
                     return DisplayMode.CENTER;
                 case middle:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
                 case large:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
                 default:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
             }
         }
     }
@@ -56,11 +56,11 @@ public interface IDisplayModeGetter {
                 case small:
                     return DisplayMode.CENTER;
                 case middle:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
                 case large:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
                 default:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
             }
         }
     }
@@ -75,11 +75,11 @@ public interface IDisplayModeGetter {
                 case small:
                     return DisplayMode.CENTER;
                 case middle:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
                 case large:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
                 default:
-                    return DisplayMode.FIT_CENTER;
+                    return DisplayMode.CENTER_INSIDE;
             }
         }
     }

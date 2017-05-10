@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.widget.ImageView;
 
+import individual.leobert.uilib.photoview.config.DisplayModeProxy;
 import individual.leobert.uilib.photoview.config.IDisplayModeProxy;
 
 /**
@@ -43,6 +44,8 @@ public class PhotoView extends ImageView implements IPhotoView {
         if(null == this.mAttacher || null == this.mAttacher.getImageView()) {
             this.mAttacher = new PhotoViewAttacher(this);
         }
+
+        mAttacher.setIDisplayModeProxy(new DisplayModeProxy(mAttacher));
 
         if(null != this.mPendingScaleType) {
             this.setScaleType(this.mPendingScaleType);
@@ -126,30 +129,12 @@ public class PhotoView extends ImageView implements IPhotoView {
         this.mAttacher.setAllowParentInterceptOnEdge(allow);
     }
 
-    /** @deprecated */
-    @Deprecated
-    public void setMinScale(float minScale) {
-        this.setMinimumScale(minScale);
-    }
-
     public void setMinimumScale(float minimumScale) {
         this.mAttacher.setMinimumScale(minimumScale);
     }
 
-    /** @deprecated */
-    @Deprecated
-    public void setMidScale(float midScale) {
-        this.setMediumScale(midScale);
-    }
-
     public void setMediumScale(float mediumScale) {
         this.mAttacher.setMediumScale(mediumScale);
-    }
-
-    /** @deprecated */
-    @Deprecated
-    public void setMaxScale(float maxScale) {
-        this.setMaximumScale(maxScale);
     }
 
     public void setMaximumScale(float maximumScale) {

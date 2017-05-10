@@ -9,8 +9,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 public class TestListActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static HashMap<Integer,Class> testPool = new HashMap<>();
+    static {
+        testPool.put(R.id.test_numbadge,TestNumBadge.class);
+        testPool.put(R.id.test_banner,TestBannerActivity.class);
+        testPool.put(R.id.test_photoview,TestPhotoViewActivity.class);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,19 +43,13 @@ public class TestListActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.test_numbadge:
-                start(TestNumBadge.class);
-                break;
-            default:
-                Toast.makeText(this, "has't set onClick for this", Toast.LENGTH_SHORT).show();
-                break;
+        int id = v.getId();
+        if (testPool.containsKey(id)) {
+            Class test = testPool.get(id);
+            start(test);
+        } else {
+            Toast.makeText(this, "has't add to test for this", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    protected void startActivity(Class<? extends Activity> clazz) {
-        Intent intent = new Intent(getActivity(), clazz);
-        startActivity(intent);
     }
 
     protected final void start(Class<? extends Activity> clazz) {
