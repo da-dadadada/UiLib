@@ -1,11 +1,9 @@
 package individual.leobert.uilib;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import individual.leobert.uilib.videoplayer.model.Video;
 import individual.leobert.uilib.videoplayer.model.VideoUrl;

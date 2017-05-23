@@ -16,31 +16,25 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
  * Created by leobert on 2017/5/22.
  */
 
-public abstract class SingleSection<VH extends RecyclerView.ViewHolder, ID>
-        extends VLayoutSection {
-    protected ID sectionData;
+public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
+        extends VLayoutSection<SD> {
+    
+    protected SingleSectionAdapter<VH, SD> adapter;
 
-    protected SectionAdapter.ViewHolderEventDecor decor = null;
-
-    protected SingleSectionAdapter<VH, ID> adapter;
-
-    public SingleSection(ID sectionData) {
-        this.sectionData = sectionData;
+    public SingleSection(SD sectionData) {
+        super(sectionData);
         initAdapter();
     }
 
-    public SingleSection(ID sectionData, SectionAdapter.ViewHolderEventDecor decor) {
-        this.sectionData = sectionData;
-        this.decor = decor;
+    public SingleSection(SD sectionData, ViewHolderEventDecor decor) {
+        super(sectionData, decor);
         initAdapter();
     }
 
-    public ID getSectionData() {
-        return sectionData;
-    }
 
     private void initAdapter() {
-        adapter = new SingleSectionAdapter<VH, ID>(decor) {
+        //only "one" item in the whole recycleView,so we use sectionData(SD as ID)
+        adapter = new SingleSectionAdapter<VH, SD>(getViewHolderEventDecor()) {
 
             @Override
             public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,7 +42,8 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, ID>
             }
 
             @Override
-            public ID getSectionItemData(int position) {
+            public SD getSectionItemData(int position) {
+                //only one item
                 return SingleSection.this.getSectionData();
             }
 
@@ -60,7 +55,7 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, ID>
     }
 
     @Override
-    public SingleSectionAdapter<VH, ID> getAdapter() {
+    public SingleSectionAdapter<VH, SD> getAdapter() {
         return adapter;
     }
 
@@ -76,7 +71,7 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, ID>
         public SingleSectionAdapter() { //unused
         }
 
-        public SingleSectionAdapter(ViewHolderEventDecor viewHolderEventDecor) {
+        public SingleSectionAdapter(ViewHolderEventDecor<VH, ID> viewHolderEventDecor) {
             super(viewHolderEventDecor);
         }
 

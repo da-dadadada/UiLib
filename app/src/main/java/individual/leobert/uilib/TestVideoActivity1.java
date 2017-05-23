@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -40,8 +41,15 @@ public class TestVideoActivity1 extends AppCompatActivity {
         //设置视频路径
         videoView.setVideoURI(uri);
 
+
+        Log.e("lmsg","start:"+System.currentTimeMillis());
+
+
         //开始播放视频
         videoView.start();
+
+
+
     }
 
     class MyPlayerOnCompletionListener implements MediaPlayer.OnCompletionListener {
@@ -56,7 +64,8 @@ public class TestVideoActivity1 extends AppCompatActivity {
 
         @Override
         public void onPrepared(MediaPlayer mp) {
-            Log.d("lmsg","onprepare:"+System.currentTimeMillis());
+            Log.e("lmsg","onprepare:"+System.currentTimeMillis());
+            mp.start();
 
         }
     }

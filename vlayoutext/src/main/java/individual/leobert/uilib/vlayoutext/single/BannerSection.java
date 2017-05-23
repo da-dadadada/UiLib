@@ -37,7 +37,7 @@ public class BannerSection extends
     }
 
     public BannerSection(Context context, List<String> sectionData,
-                         VLayoutSection.SectionAdapter.ViewHolderEventDecor decor) {
+                         VLayoutSection.ViewHolderEventDecor decor) {
         super(sectionData, decor);
         this.context = context;
     }
