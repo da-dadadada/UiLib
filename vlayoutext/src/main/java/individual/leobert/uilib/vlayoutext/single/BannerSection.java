@@ -1,4 +1,4 @@
-package individual.leobert.uilib.vlayoutext;
+package individual.leobert.uilib.vlayoutext.single;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,8 @@ import java.util.List;
 import individual.leobert.uilib.autolooperbanner.AutoLooperBanner;
 import individual.leobert.uilib.autolooperbanner.IBannerUpdate;
 import individual.leobert.uilib.autolooperbanner.ImgRes;
+import individual.leobert.uilib.vlayoutext.R;
+import individual.leobert.uilib.vlayoutext.VLayoutSection;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlext </p>
@@ -35,7 +37,7 @@ public class BannerSection extends
     }
 
     public BannerSection(Context context, List<String> sectionData,
-                         SectionAdapter.ViewHolderEventDecor decor) {
+                         VLayoutSection.SectionAdapter.ViewHolderEventDecor decor) {
         super(sectionData, decor);
         this.context = context;
     }

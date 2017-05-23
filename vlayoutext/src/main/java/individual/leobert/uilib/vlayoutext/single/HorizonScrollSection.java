@@ -1,4 +1,4 @@
-package individual.leobert.uilib.vlayoutext;
+package individual.leobert.uilib.vlayoutext.single;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.List;
+
+import individual.leobert.uilib.vlayoutext.R;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlayoutext </p>

@@ -1,10 +1,12 @@
-package individual.leobert.uilib.vlayoutext;
+package individual.leobert.uilib.vlayoutext.single;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
+
+import individual.leobert.uilib.vlayoutext.VLayoutSection;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlext </p>

@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/autolooperbanner/autolooperbanner.iml" filepath="$PROJECT_DIR$/autolooperbanner/autolooperbanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/numbadge/numbadge.iml" filepath="$PROJECT_DIR$/numbadge/numbadge.iml" />
       <module fileurl="file://$PROJECT_DIR$/photoview/photoview.iml" filepath="$PROJECT_DIR$/photoview/photoview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/videoplayer/videoplayer.iml" filepath="$PROJECT_DIR$/videoplayer/videoplayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/vlayoutext/vlayoutext.iml" filepath="$PROJECT_DIR$/vlayoutext/vlayoutext.iml" />
     </modules>
   </component>

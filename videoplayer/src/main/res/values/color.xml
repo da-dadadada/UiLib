@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--videoplayer start-->
+    <color name="cwl_audio_progress_bg">#00b2ff</color>
+    <color name="cwl_audio_progress_first">#ffffff</color>
+    <color name="cwl_audio_progress_second">#6b6666</color>
+
+    <color name="cwl_audio_default_bg">#aa000000</color>
+    <color name="cwl_audio_select_color">#00b2ff</color>
+    <color name="cwl_audio_normal_color">#ffffffff</color>
+    <color name="cwl_audio_divider_color">#55504a</color>
+
+    <!--videoplayer end-->
+
+
+
+</resources>
