@@ -58,7 +58,6 @@ repositories {
     }
 }
 
-
 buildscript {
     repositories {
         jcenter()

@@ -32,6 +32,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+
+            <Button
+                android:id="@+id/test_vlayout"
+                android:text="test vlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
     </ScrollView>
 

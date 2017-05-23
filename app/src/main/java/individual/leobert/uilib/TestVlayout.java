@@ -10,21 +10,21 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class TestListActivity extends AppCompatActivity implements View.OnClickListener {
+import individual.leobert.uilib.vlayout.TestVLayoutComplex;
+
+public class TestVlayout extends AppCompatActivity implements View.OnClickListener {
+
 
     private static SparseArray<Class> testPool = new SparseArray<>();
 
     static {
-        testPool.put(R.id.test_numbadge, TestNumBadge.class);
-        testPool.put(R.id.test_banner, TestBannerActivity.class);
-        testPool.put(R.id.test_photoview, TestPhotoViewActivity.class);
-        testPool.put(R.id.test_vlayout, TestVlayout.class);
+        testPool.put(R.id.test_vlayout_complex, TestVLayoutComplex.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_list);
+        setContentView(R.layout.activity_test_vlayout);
         LinearLayout testCollections = (LinearLayout) findViewById(R.id.test_ll);
         setOnClick2Child(testCollections);
     }
@@ -74,6 +74,4 @@ public class TestListActivity extends AppCompatActivity implements View.OnClickL
     private Activity getActivity() {
         return this;
     }
-
-
 }

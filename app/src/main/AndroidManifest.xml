@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="individual.leobert.uilib">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +24,9 @@
         </activity>
         <activity android:name=".TestNumBadge" />
         <activity android:name=".TestPhotoViewActivity" />
-        <activity android:name=".TestBannerActivity"></activity>
+        <activity android:name=".TestBannerActivity" />
+        <activity android:name=".TestVlayout" />
+        <activity android:name=".vlayout.TestVLayoutComplex"></activity>
     </application>
 
 </manifest>

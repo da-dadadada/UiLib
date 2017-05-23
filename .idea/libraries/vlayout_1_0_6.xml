@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="vlayout-1.0.6">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/39a45a7eddc6f8879113f742310233f98f8e9c87/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/39a45a7eddc6f8879113f742310233f98f8e9c87/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.alibaba.android/vlayout/1.0.6/15523906ceb5b38a66ee276c79e2fde698510565/vlayout-1.0.6-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
