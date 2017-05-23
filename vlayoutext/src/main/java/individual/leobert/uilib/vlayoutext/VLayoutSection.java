@@ -20,15 +20,45 @@ import com.alibaba.android.vlayout.DelegateAdapter;
 public abstract class VLayoutSection {
 
 
-    public abstract DelegateAdapter.Adapter getAdapter();
+    public abstract SectionAdapter getAdapter();
 
-    public static abstract class SectionAdapter<VH extends RecyclerView.ViewHolder>
+    public static abstract class SectionAdapter<VH extends RecyclerView.ViewHolder,ID>
             extends DelegateAdapter.Adapter<VH> {
+
+        ViewHolderEventDecor viewHolderEventDecor;
+
+        public SectionAdapter() {
+            this(null);
+        }
+
+        public SectionAdapter(ViewHolderEventDecor viewHolderEventDecor) {
+            this.viewHolderEventDecor = viewHolderEventDecor;
+        }
 
         protected View useInflate(@LayoutRes int layout, @NonNull ViewGroup parent) {
             return LayoutInflater.from(parent.getContext())
                     .inflate(layout, parent, false);
         }
 
+        public abstract ID getSectionItemData(int position);
+
+
+        @Override
+        public final void onBindViewHolder(VH holder, int position) {
+            onBindViewHolder2(holder, position);
+            if (viewHolderEventDecor != null)
+                viewHolderEventDecor.decor(holder,getSectionItemData(position),position);
+        }
+
+        protected abstract void onBindViewHolder2(VH holder,int position);
+
+        public abstract class ViewHolderEventDecor {
+
+            public abstract void decor(VH holder, ID itemData, int position);
+        }
+
     }
+
+
+
 }

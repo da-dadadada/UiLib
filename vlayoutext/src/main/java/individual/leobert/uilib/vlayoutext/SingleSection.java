@@ -3,7 +3,6 @@ package individual.leobert.uilib.vlayoutext;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 
@@ -15,22 +14,51 @@ import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
  * Created by leobert on 2017/5/22.
  */
 
-public abstract class SingleSection<VH extends RecyclerView.ViewHolder> extends VLayoutSection {
-    protected SingleSectionAdapter<VH> adapter = new SingleSectionAdapter<VH>() {
+public abstract class SingleSection<VH extends RecyclerView.ViewHolder, ID>
+        extends VLayoutSection {
+    protected ID sectionData;
 
-        @Override
-        public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-            return SingleSection.this.onCreateViewHolder(parent);
-        }
+    protected SectionAdapter.ViewHolderEventDecor decor = null;
 
-        @Override
-        public void onBindViewHolder(VH holder, int position) {
-            SingleSection.this.onBindViewHolder(holder);
-        }
-    };
+    protected SingleSectionAdapter<VH, ID> adapter;
+
+    public SingleSection(ID sectionData) {
+        this.sectionData = sectionData;
+        initAdapter();
+    }
+
+    public SingleSection(ID sectionData, SectionAdapter.ViewHolderEventDecor decor) {
+        this.sectionData = sectionData;
+        this.decor = decor;
+        initAdapter();
+    }
+
+    public ID getSectionData() {
+        return sectionData;
+    }
+
+    private void initAdapter() {
+        adapter = new SingleSectionAdapter<VH, ID>(decor) {
+
+            @Override
+            public VH onCreateViewHolder(ViewGroup parent, int viewType) {
+                return SingleSection.this.onCreateViewHolder(parent);
+            }
+
+            @Override
+            public ID getSectionItemData(int position) {
+                return SingleSection.this.getSectionData();
+            }
+
+            @Override
+            public void onBindViewHolder2(VH holder, int position) {
+                SingleSection.this.onBindViewHolder(holder);
+            }
+        };
+    }
 
     @Override
-    public DelegateAdapter.Adapter<VH> getAdapter() {
+    public SingleSectionAdapter<VH, ID> getAdapter() {
         return adapter;
     }
 
@@ -40,8 +68,15 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder> extends 
     //only one instance,position always 0
     abstract void onBindViewHolder(VH holder);
 
-    public static abstract class SingleSectionAdapter <VH extends RecyclerView.ViewHolder>
-            extends SectionAdapter<VH> {
+    public static abstract class SingleSectionAdapter<VH extends RecyclerView.ViewHolder, ID>
+            extends SectionAdapter<VH, ID> {
+
+        public SingleSectionAdapter() { //unused
+        }
+
+        public SingleSectionAdapter(ViewHolderEventDecor viewHolderEventDecor) {
+            super(viewHolderEventDecor);
+        }
 
         @Override
         public final LayoutHelper onCreateLayoutHelper() {

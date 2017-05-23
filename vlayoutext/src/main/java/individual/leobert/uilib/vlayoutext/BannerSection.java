@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.alibaba.android.vlayout.DelegateAdapter;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -24,27 +23,28 @@ import individual.leobert.uilib.autolooperbanner.ImgRes;
  * Created by leobert on 2017/5/22.
  */
 
-public class BannerSection extends SingleSection<BannerSection.BannerSectionViewHolder> {
+public class BannerSection extends
+        SingleSection<BannerSection.BannerSectionViewHolder, List<String>> {
 
     private Context context;
 
-    private List<String> datas;
 
     public BannerSection(Context context, List<String> datas) {
+        super(datas);
         this.context = context;
-        this.datas = datas;
     }
 
-    @Override
-    public DelegateAdapter.Adapter getAdapter() {
-        return adapter;
+    public BannerSection(Context context, List<String> sectionData,
+                         SectionAdapter.ViewHolderEventDecor decor) {
+        super(sectionData, decor);
+        this.context = context;
     }
 
     @Override
     BannerSectionViewHolder onCreateViewHolder(ViewGroup parent) {
         return new BannerSectionViewHolder(LayoutInflater.from(context)
                 .inflate(R.layout.vlext_section_banner, parent, false),
-                this.datas);
+                getSectionData());
     }
 
     @Override
@@ -66,6 +66,10 @@ public class BannerSection extends SingleSection<BannerSection.BannerSectionView
                         .into(imageView);
             }
         };
+
+        public AutoLooperBanner getBannerLayout() {
+            return bannerLayout;
+        }
 
         public BannerSectionViewHolder(View itemView, List<String> datas) {
             super(itemView);
