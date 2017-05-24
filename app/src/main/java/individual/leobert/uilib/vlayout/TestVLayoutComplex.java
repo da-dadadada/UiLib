@@ -2,15 +2,14 @@ package individual.leobert.uilib.vlayout;
 
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,8 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import individual.leobert.uilib.R;
-import individual.leobert.uilib.TestVideoActivity1;
 import individual.leobert.uilib.autolooperbanner.AutoLooperBanner;
+import individual.leobert.uilib.vlayoutext.VLSectionAssembler;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
 import individual.leobert.uilib.vlayoutext.group.GridSection;
 import individual.leobert.uilib.vlayoutext.group.ListSection;
@@ -75,20 +74,28 @@ public class TestVLayoutComplex extends AppCompatActivity {
 //        delegateAdapter.addAdapter(new SubBannerAdapter(this, urls));
 //
         BannerSection bannerSection = newBannerSection();
-        delegateAdapter.addAdapter(bannerSection.getAdapter());
 
         final List<String> urls2 = new ArrayList<>();
         urls2.addAll(urls);
         urls2.addAll(urls);
         urls2.addAll(urls);
 
-        delegateAdapter.addAdapter(newHSRVAdapter(urls2));
-        delegateAdapter.addAdapter(newListSection(Data1.genTest(10)).getAdapter());
-        delegateAdapter.addAdapter(newGrideSection().getAdapter());
-        delegateAdapter.addAdapter(newRangeGridSection().getAdapter());
+//        delegateAdapter.addAdapter(bannerSection.getAdapter());
+//        delegateAdapter.addAdapter(newHSRVAdapter(urls2));
+//        delegateAdapter.addAdapter(newListSection(Data1.genTest(10)).getAdapter());
+//        delegateAdapter.addAdapter(newGrideSection().getAdapter());
+//        delegateAdapter.addAdapter(newRangeGridSection().getAdapter());
 
+//        recyclerView.setAdapter(delegateAdapter);
 
-        recyclerView.setAdapter(delegateAdapter);
+        VLSectionAssembler.getAssembler(recyclerView,delegateAdapter)
+                .add(bannerSection)
+//                .add(newHSRVAdapter(urls2))
+                .add(newListSection(Data1.genTest(10)))
+                .add(newGrideSection())
+                .add(newRangeGridSection())
+                .assembler();
+
 
         delegateAdapter.notifyDataSetChanged();
     }
