@@ -1,7 +1,6 @@
 package individual.leobert.uilib.vlayoutext.group;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
@@ -31,6 +30,10 @@ public abstract class ListSection<VH extends RecyclerView.ViewHolder, ID>
 
     @Override
     LayoutHelper onCreateLayoutHelper() {
-        return new LinearLayoutHelper();
+        final LinearLayoutHelper linearLayoutHelper = new LinearLayoutHelper();
+        decorLayoutHelper(linearLayoutHelper);
+        return linearLayoutHelper;
     }
+
+    protected abstract void decorLayoutHelper(final LinearLayoutHelper layoutHelper);
 }

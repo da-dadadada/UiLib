@@ -24,10 +24,12 @@ public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
 
     public GroupSection(List<ID> sectionData) {
         super(sectionData);
+        initAdapter();
     }
 
     public GroupSection(List<ID> sectionData, ViewHolderEventDecor decor) {
         super(sectionData, decor);
+        initAdapter();
     }
 
     @Override

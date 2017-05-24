@@ -19,7 +19,7 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
 public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
         extends VLayoutSection<SD> {
     
-    protected SingleSectionAdapter<VH, SD> adapter;
+    private SingleSectionAdapter<VH, SD> adapter;
 
     public SingleSection(SD sectionData) {
         super(sectionData);
@@ -32,7 +32,7 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
     }
 
 
-    private void initAdapter() {
+    protected void initAdapter() {
         //only "one" item in the whole recycleView,so we use sectionData(SD as ID)
         adapter = new SingleSectionAdapter<VH, SD>(getViewHolderEventDecor()) {
 
@@ -76,7 +76,7 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
         }
 
         @Override
-        public final LayoutHelper onCreateLayoutHelper() {
+        public LayoutHelper onCreateLayoutHelper() {
             return new SingleLayoutHelper();
         }
 
