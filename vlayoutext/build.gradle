@@ -48,6 +48,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-core-utils:25.3.1'
     testCompile 'junit:junit:4.12'
 
     provided('com.alibaba.android:vlayout:1.0.6@aar') {
@@ -57,6 +58,7 @@ dependencies {
     compile 'individual.leobert.libs:autolooperbanner:1.0.0'
 
     provided 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
 }
 
 
