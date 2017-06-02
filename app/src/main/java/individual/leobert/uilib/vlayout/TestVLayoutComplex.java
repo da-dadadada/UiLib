@@ -3,6 +3,7 @@ package individual.leobert.uilib.vlayout;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +29,8 @@ import java.util.List;
 
 import individual.leobert.uilib.R;
 import individual.leobert.uilib.autolooperbanner.AutoLooperBanner;
+import individual.leobert.uilib.autolooperbanner.IBannerUpdate;
+import individual.leobert.uilib.autolooperbanner.ImgRes;
 import individual.leobert.uilib.vlayoutext.VLSectionAssembler;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
 import individual.leobert.uilib.vlayoutext.group.GridSection;
@@ -38,6 +41,16 @@ import individual.leobert.uilib.vlayoutext.single.BannerSection;
 
 public class TestVLayoutComplex extends AppCompatActivity {
     final List<String> urls = new ArrayList<>();
+
+    private IBannerUpdate iBannerUpdate = new IBannerUpdate() {
+        @Override
+        public void UpdateImage(ImgRes<?> res, ImageView imageView) {
+            Glide.with(TestVLayoutComplex.this)
+                    .load(res.getRes())
+                    .asBitmap()
+                    .into(imageView);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +101,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
 
 //        recyclerView.setAdapter(delegateAdapter);
 
-        VLSectionAssembler.getAssembler(recyclerView,delegateAdapter)
+        VLSectionAssembler.getAssembler(recyclerView, delegateAdapter)
                 .add(bannerSection)
 //                .add(newHSRVAdapter(urls2))
                 .add(newListSection(Data1.genTest(10)))
@@ -162,22 +175,51 @@ public class TestVLayoutComplex extends AppCompatActivity {
         }
     }
 
+    private static class BannerSectionViewHolder
+            extends BannerSection.BannerSectionViewHolder {
+
+        public BannerSectionViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @NonNull
+        @Override
+        protected AutoLooperBanner init(View itemView) {
+            return (AutoLooperBanner) itemView.findViewById(R.id.vlext_banner);
+        }
+    }
+
 
     private BannerSection newBannerSection() {
 
-        BannerSection section = new BannerSection(this, urls, new VLayoutSection.
-                ViewHolderEventDecor<BannerSection.BannerSectionViewHolder, List<String>>() {
-            @Override
-            public void decor(BannerSection.BannerSectionViewHolder holder, final List<String> itemData, int position) {
-                holder.getBannerLayout().setOnBannerItemClickListener(new AutoLooperBanner.OnBannerItemClickListener() {
+        BannerSection<BannerSectionViewHolder> section =
+                new BannerSection<BannerSectionViewHolder>(urls, new VLayoutSection.
+                        ViewHolderEventDecor<BannerSectionViewHolder, List<String>>() {
                     @Override
-                    public void onItemClick(int position) {
-                        Log.d("lmsg", "click:" + position + "\r\nurl:" + itemData.get(position));
+                    public void decor(BannerSectionViewHolder holder, final List<String> itemData, int position) {
+                        holder.getBannerLayout().setOnBannerItemClickListener(new AutoLooperBanner.OnBannerItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                Log.d("lmsg", "click:" + position + "\r\nurl:" + itemData.get(position));
+                            }
+                        });
                     }
-                });
-            }
 
-        });
+                }) {
+                    @Override
+                    protected TestVLayoutComplex.BannerSectionViewHolder onCreateViewHolder(ViewGroup parent) {
+                        return new TestVLayoutComplex.BannerSectionViewHolder(
+                                LayoutInflater.from(parent.getContext())
+                                        .inflate(R.layout.vlext_section_banner, parent, false)
+                        );
+                    }
+
+                    @Override
+                    protected void onBindViewHolder(BannerSectionViewHolder holder) {
+                        super.onBindViewHolder(holder);
+                        holder.update(iBannerUpdate,getSectionData());
+                    }
+                };
         return section;
     }
 
@@ -289,7 +331,6 @@ public class TestVLayoutComplex extends AppCompatActivity {
     }
 
 
-
     private RangeGridSection<ImageViewHolder, Integer> newRangeGridSection() {
 
         ArrayList<Integer> datas = new ArrayList<>();
@@ -305,7 +346,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
                     @Override
                     protected void decorLayoutHelper(RangeGridLayoutHelper layoutHelper) {
                         layoutHelper.setBgColor(Color.GREEN);
-                        layoutHelper.setWeights(new float[]{10f,Float.NaN, 20f});
+                        layoutHelper.setWeights(new float[]{10f, Float.NaN, 20f});
                         layoutHelper.setPadding(15, 15, 15, 15);
                         layoutHelper.setMargin(15, 15, 15, 15);
                         layoutHelper.setHGap(10);

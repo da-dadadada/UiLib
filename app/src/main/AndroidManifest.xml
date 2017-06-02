@@ -43,7 +43,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/VideoActivityTheme.Full" />
-        <activity android:name=".TestNineImage"></activity>
+        <activity android:name=".TestNineImage" />
+        <activity android:name=".GuideActivity"></activity>
     </application>
 
 </manifest>
