@@ -1,6 +1,5 @@
 package individual.leobert.uilib.vlayoutext.group;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
@@ -28,11 +27,6 @@ public abstract class GroupSection<VH extends EventViewHolder, ID,IEL>
         initAdapter();
     }
 
-    public GroupSection(List<ID> sectionData, ViewHolderDecor<VH,ID> decor) {
-        super(sectionData, decor);
-        initAdapter();
-    }
-
     protected IEL newItemEventListener(final ID itemData,final int position) {
         return null;
     }
@@ -43,7 +37,7 @@ public abstract class GroupSection<VH extends EventViewHolder, ID,IEL>
     }
 
     private void initAdapter() {
-        adapter = new GroupSectionAdapter<VH, ID>(getViewHolderEventDecor()) {
+        adapter = new GroupSectionAdapter<VH, ID>() {
 
             @Override
             public LayoutHelper onCreateLayoutHelper() {
@@ -67,7 +61,7 @@ public abstract class GroupSection<VH extends EventViewHolder, ID,IEL>
 
 
             @Override
-            public void onBindViewHolder2(VH holder, int position) {
+            public void onBindViewHolder(VH holder, int position) {
                 GroupSection.this.onBindViewHolder(holder,position,getSectionItemData(position));
                 IEL iel = newItemEventListener(getSectionItemData(position),position);
                 if (iel != null)
@@ -97,17 +91,11 @@ public abstract class GroupSection<VH extends EventViewHolder, ID,IEL>
     public static abstract class GroupSectionAdapter<VH extends EventViewHolder, ID>
             extends SectionAdapter<VH, ID> {
 
-        public GroupSectionAdapter() { //unused
-        }
-
-        public GroupSectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
-            super(viewHolderDecor);
-        }
-
-//        @Override
-//        public void onBindViewHolder(VH holder, int position) {
-//            super.onBindViewHolder(holder, position);
-//            holder.bindEventListener();
+//        public GroupSectionAdapter() { //unused
+//        }
+//
+//        public GroupSectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
+//            super(viewHolderDecor);
 //        }
     }
 }

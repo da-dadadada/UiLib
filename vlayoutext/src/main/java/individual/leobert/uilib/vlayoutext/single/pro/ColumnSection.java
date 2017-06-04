@@ -1,6 +1,5 @@
 package individual.leobert.uilib.vlayoutext.single.pro;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
@@ -8,6 +7,7 @@ import com.alibaba.android.vlayout.layout.ColumnLayoutHelper;
 
 import java.util.List;
 
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
 
 /**
@@ -18,7 +18,7 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
  * Created by leobert on 2017/5/24.
  */
 
-public abstract class ColumnSection<VH extends RecyclerView.ViewHolder, ID>
+public abstract class ColumnSection<VH extends EventViewHolder, ID,IEL>
         extends VLayoutSection< List<ID>> {
 
     private SectionAdapter<VH, ID> adapter;
@@ -29,14 +29,19 @@ public abstract class ColumnSection<VH extends RecyclerView.ViewHolder, ID>
         initAdapter();
     }
 
-    public ColumnSection(List<ID> sectionData,
-                         ViewHolderDecor decor) {
-        super(sectionData, decor);
-        initAdapter();
+    protected IEL newItemEventListener(final ID itemData,final int position) {
+        return null;
     }
 
+
+//    public ColumnSection(List<ID> sectionData,
+//                         ViewHolderDecor decor) {
+//        super(sectionData, decor);
+//        initAdapter();
+//    }
+
     protected void initAdapter() {
-        adapter = new SectionAdapter<VH, ID>(decor) {
+        adapter = new SectionAdapter<VH, ID>() {
 
             @Override
             public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,8 +64,12 @@ public abstract class ColumnSection<VH extends RecyclerView.ViewHolder, ID>
             }
 
             @Override
-            protected void onBindViewHolder2(VH holder, int position) {
-                ColumnSection.this.onBindViewHolder(holder,position,getSectionItemData(position));
+            public void onBindViewHolder(VH holder, int position) {
+                ColumnSection.this.onBindViewHolder(holder,
+                        position,getSectionItemData(position));
+                IEL iel = newItemEventListener(getSectionItemData(position),position);
+                if (iel != null)
+                    holder.bindEventListener(iel);
             }
         };
     }

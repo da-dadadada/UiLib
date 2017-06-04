@@ -1,12 +1,12 @@
 package individual.leobert.uilib.vlayoutext.group;
 
-import android.support.v7.widget.RecyclerView;
-
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper;
 
 import java.util.List;
+
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlayoutext.group </p>
@@ -16,14 +16,10 @@ import java.util.List;
  * Created by leobert on 2017/5/24.
  */
 
-public abstract class RangeGridSection<VH extends RecyclerView.ViewHolder, ID>
-        extends GridSection<VH, ID> {
+public abstract class RangeGridSection<VH extends EventViewHolder, ID,IEL>
+        extends GridSection<VH, ID,IEL> {
     public RangeGridSection(List<ID> sectionData, int spanCount) {
         super(sectionData, spanCount);
-    }
-
-    public RangeGridSection(List<ID> sectionData, int spanCount, ViewHolderDecor decor) {
-        super(sectionData, spanCount, decor);
     }
 
     @Override

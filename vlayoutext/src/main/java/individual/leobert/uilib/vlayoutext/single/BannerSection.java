@@ -25,23 +25,20 @@ public abstract class BannerSection<VH extends BannerSection.BannerSectionViewHo
         super(datas);
     }
 
-    public BannerSection(List<String> sectionData,
-                         ViewHolderDecor decor) {
-        super(sectionData, decor);
-    }
-
     @Override
     protected abstract VH onCreateViewHolder(ViewGroup parent);
-//    {
-//        return new VH(LayoutInflater.from(context)
-//                .inflate(R.layout.vlext_section_banner, parent, false),
-//                getSectionData());
-//    }
+
+    protected AutoLooperBanner.OnBannerItemClickListener
+    newItemEventListener(final List<String> datas) {
+        return null;
+    }
 
 
     @Override
     protected void onBindViewHolder(BannerSectionViewHolder holder) {
-
+        AutoLooperBanner.OnBannerItemClickListener listener = newItemEventListener(getSectionData());
+        if (listener != null)
+            holder.getBannerLayout().setOnBannerItemClickListener(listener);
     }
 
 

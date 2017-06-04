@@ -105,8 +105,8 @@ public class TestVLayoutComplex extends AppCompatActivity {
                 .add(bannerSection)
 //                .add(newHSRVAdapter(urls2))
                 .add(newListSection(Data1.genTest(10)))
-                .add(newGrideSection())
-                .add(newRangeGridSection())
+//                .add(newGrideSection())
+//                .add(newRangeGridSection())
                 .assembler();
 
 
@@ -193,18 +193,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
     private BannerSection newBannerSection() {
 
         BannerSection<BannerSectionViewHolder> section =
-                new BannerSection<BannerSectionViewHolder>(urls, new VLayoutSection.ViewHolderDecor<BannerSectionViewHolder, List<String>>() {
-                    @Override
-                    public void decor(BannerSectionViewHolder holder, final List<String> itemData, int position) {
-                        holder.getBannerLayout().setOnBannerItemClickListener(new AutoLooperBanner.OnBannerItemClickListener() {
-                            @Override
-                            public void onItemClick(int position) {
-                                Log.d("lmsg", "click:" + position + "\r\nurl:" + itemData.get(position));
-                            }
-                        });
-                    }
-
-                }) {
+                new BannerSection<BannerSectionViewHolder>(urls) {
                     @Override
                     protected TestVLayoutComplex.BannerSectionViewHolder onCreateViewHolder(ViewGroup parent) {
                         return new TestVLayoutComplex.BannerSectionViewHolder(
@@ -214,41 +203,46 @@ public class TestVLayoutComplex extends AppCompatActivity {
                     }
 
                     @Override
+                    protected AutoLooperBanner.OnBannerItemClickListener newItemEventListener(final List<String> datas) {
+                        return new AutoLooperBanner.OnBannerItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                Log.d("lmsg", "click:" + position + "\r\nurl:" + datas.get(position));
+                            }
+                        };
+                    }
+
+                    @Override
                     protected void onBindViewHolder(BannerSectionViewHolder holder) {
                         super.onBindViewHolder(holder);
-                        holder.update(iBannerUpdate,getSectionData());
+                        holder.update(iBannerUpdate, getSectionData());
                     }
                 };
         return section;
     }
 
-    private ListSection<LinearViewHolderSample, Data1> newListSection(List<Data1> datas) {
-        VLayoutSection.ViewHolderDecor<LinearViewHolderSample, Data1> eventDecor =
-                new VLayoutSection.ViewHolderDecor<LinearViewHolderSample, Data1>() {
+    private ListSection<LinearViewHolderSample, Data1, LinearViewHolderSample.IEventListener> newListSection(List<Data1> datas) {
+
+
+        ListSection<LinearViewHolderSample,
+                Data1,
+                LinearViewHolderSample.IEventListener> listSection =
+                new ListSection<LinearViewHolderSample,
+                        Data1,
+                        LinearViewHolderSample.IEventListener>(datas) {
+
                     @Override
-                    public void decor(LinearViewHolderSample holder, Data1 itemData, int position) {
-                        holder.ivAvatar.setOnClickListener(new View.OnClickListener() {
+                    protected LinearViewHolderSample.IEventListener newItemEventListener(final Data1 itemData, final int position) {
+                        return new LinearViewHolderSample.IEventListener() {
+
                             @Override
-                            public void onClick(View v) {
-                                //presenter.on...Called(data)
+                            public void onAvatarClick() {
                                 Toast.makeText(TestVLayoutComplex.this, "avatar", Toast.LENGTH_SHORT).show();
+                                itemData.setTitle("changed title");
+                                getAdapter().notifyItemChanged(position);
                             }
-                        });
-
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //presenter.on...Called(data)
-                                Toast.makeText(TestVLayoutComplex.this, "item", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        };
                     }
-                };
-
-
-        ListSection<LinearViewHolderSample, Data1> listSection =
-                new ListSection<LinearViewHolderSample, Data1>(datas, eventDecor) {
-
 
                     @Override
                     protected void decorLayoutHelper(LinearLayoutHelper layoutHelper) {
@@ -277,158 +271,157 @@ public class TestVLayoutComplex extends AppCompatActivity {
     }
 
 
-    private GridSection<ImageViewHolder, Integer> newGrideSection() {
-        VLayoutSection.ViewHolderDecor<ImageViewHolder, Integer> eventDecor =
-                new VLayoutSection.ViewHolderDecor<ImageViewHolder, Integer>() {
-                    @Override
-                    public void decor(ImageViewHolder holder, Integer itemData, int position) {
-                        holder.imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //presenter.on...Called(data)
-                                Toast.makeText(TestVLayoutComplex.this, "img", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                };
-
-        ArrayList<Integer> datas = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            datas.add(R.drawable.v1000_drawable_avatar_default);
-        }
-
-
-        GridSection<ImageViewHolder, Integer> gridSection =
-                new GridSection<ImageViewHolder, Integer>(datas, 2, eventDecor) {
-
-
-                    @Override
-                    protected void decorLayoutHelper(GridLayoutHelper layoutHelper) {
-                        layoutHelper.setBgColor(ContextCompat.getColor(TestVLayoutComplex.this,
-                                R.color.colorPrimary));
-                        layoutHelper.setGap(10);
-                        layoutHelper.setAutoExpand(true);
-//                        layoutHelper.setWeights(new float[] {0.5f,0.5f});
-                    }
-
-                    @Override
-                    protected ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        return new ImageViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.vl_section_item_h_scroll_rv, parent, false));
-                    }
-
-                    @Override
-                    protected void onBindViewHolder(ImageViewHolder holder, int position, Integer itemData) {
-                        holder.itemView.setLayoutParams(new VirtualLayoutManager
-                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT));
-                        holder.imageView.setImageResource(itemData);
-
-                    }
-                };
-        return gridSection;
-    }
-
-
-    private RangeGridSection<ImageViewHolder, Integer> newRangeGridSection() {
-
-        ArrayList<Integer> datas = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            datas.add(R.drawable.v1000_drawable_avatar_default);
-        }
-
-
-        RangeGridSection<ImageViewHolder, Integer> gridSection =
-                new RangeGridSection<ImageViewHolder, Integer>(datas, 4) {
-
-
-                    @Override
-                    protected void decorLayoutHelper(RangeGridLayoutHelper layoutHelper) {
-                        layoutHelper.setBgColor(Color.GREEN);
-                        layoutHelper.setWeights(new float[]{10f, Float.NaN, 20f});
-                        layoutHelper.setPadding(15, 15, 15, 15);
-                        layoutHelper.setMargin(15, 15, 15, 15);
-                        layoutHelper.setHGap(10);
-                        layoutHelper.setVGap(10);
-                        RangeGridLayoutHelper.GridRangeStyle rangeStyle = new RangeGridLayoutHelper.GridRangeStyle();
-                        rangeStyle.setBgColor(Color.RED);
-                        rangeStyle.setSpanCount(2);
-                        rangeStyle.setWeights(new float[]{46.665f});
-                        rangeStyle.setPadding(15, 15, 15, 15);
-                        rangeStyle.setMargin(15, 15, 15, 15);
-                        rangeStyle.setHGap(5);
-                        rangeStyle.setVGap(5);
-                        layoutHelper.addRangeStyle(4, 7, rangeStyle);
-                        RangeGridLayoutHelper.GridRangeStyle rangeStyle1 = new RangeGridLayoutHelper.GridRangeStyle();
-                        rangeStyle1.setBgColor(Color.YELLOW);
-                        rangeStyle1.setSpanCount(2);
-                        rangeStyle1.setWeights(new float[]{46.665f});
-                        rangeStyle1.setPadding(15, 15, 15, 15);
-                        rangeStyle1.setMargin(15, 15, 15, 15);
-                        rangeStyle1.setHGap(5);
-                        rangeStyle1.setVGap(5);
-                        layoutHelper.addRangeStyle(8, 11, rangeStyle1);
-                    }
-
-                    @Override
-                    protected ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        return new ImageViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.vl_section_item_h_scroll_rv, parent, false));
-                    }
-
-                    @Override
-                    protected void onBindViewHolder(ImageViewHolder holder, int position, Integer itemData) {
-                        holder.itemView.setLayoutParams(new VirtualLayoutManager
-                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT));
-                        holder.imageView.setImageResource(itemData);
-
-                    }
-                };
-        return gridSection;
-    }
-
-
-    private StaggerSection<ImageViewHolder, String> newStaggerSection() {
-
-        ArrayList<String> datas = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            datas.addAll(urls);
-        }
-
-
-        StaggerSection<ImageViewHolder, String> gridSection =
-                new StaggerSection<ImageViewHolder, String>(datas, 2) {
-
-
-                    @Override
-                    protected void decorLayoutHelper(StaggeredGridLayoutHelper layoutHelper) {
-                        layoutHelper.setBgColor(ContextCompat.getColor(TestVLayoutComplex.this,
-                                R.color.cwl_audio_divider_color));
-                        layoutHelper.setGap(10);
-//                        layoutHelper.setWeights(new float[] {0.5f,0.5f});
-                    }
-
-                    @Override
-                    protected ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                        return new ImageViewHolder(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.vl_section_item_h_scroll_rv, parent, false));
-                    }
-
-                    @Override
-                    protected void onBindViewHolder(ImageViewHolder holder, int position, String itemData) {
-                        holder.itemView.setLayoutParams(new VirtualLayoutManager
-                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT));
-                        Glide.with(holder.itemView.getContext())
-                                .load(itemData)
-                                .into(holder.imageView);
-
-                    }
-                };
-        return gridSection;
-    }
-
+//    private GridSection<ImageViewHolder, Integer> newGrideSection() {
+//        VLayoutSection.ViewHolderDecor<ImageViewHolder, Integer> eventDecor =
+//                new VLayoutSection.ViewHolderDecor<ImageViewHolder, Integer>() {
+//                    @Override
+//                    public void decor(ImageViewHolder holder, Integer itemData, int position) {
+//                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                //presenter.on...Called(data)
+//                                Toast.makeText(TestVLayoutComplex.this, "img", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                    }
+//                };
+//
+//        ArrayList<Integer> datas = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            datas.add(R.drawable.v1000_drawable_avatar_default);
+//        }
+//
+//
+//        GridSection<ImageViewHolder, Integer> gridSection =
+//                new GridSection<ImageViewHolder, Integer>(datas, 2, eventDecor) {
+//
+//
+//                    @Override
+//                    protected void decorLayoutHelper(GridLayoutHelper layoutHelper) {
+//                        layoutHelper.setBgColor(ContextCompat.getColor(TestVLayoutComplex.this,
+//                                R.color.colorPrimary));
+//                        layoutHelper.setGap(10);
+//                        layoutHelper.setAutoExpand(true);
+////                        layoutHelper.setWeights(new float[] {0.5f,0.5f});
+//                    }
+//
+//                    @Override
+//                    protected ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//                        return new ImageViewHolder(LayoutInflater.from(parent.getContext())
+//                                .inflate(R.layout.vl_section_item_h_scroll_rv, parent, false));
+//                    }
+//
+//                    @Override
+//                    protected void onBindViewHolder(ImageViewHolder holder, int position, Integer itemData) {
+//                        holder.itemView.setLayoutParams(new VirtualLayoutManager
+//                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                                ViewGroup.LayoutParams.WRAP_CONTENT));
+//                        holder.imageView.setImageResource(itemData);
+//
+//                    }
+//                };
+//        return gridSection;
+//    }
+//
+//
+//    private RangeGridSection<ImageViewHolder, Integer> newRangeGridSection() {
+//
+//        ArrayList<Integer> datas = new ArrayList<>();
+//        for (int i = 0; i < 30; i++) {
+//            datas.add(R.drawable.v1000_drawable_avatar_default);
+//        }
+//
+//
+//        RangeGridSection<ImageViewHolder, Integer> gridSection =
+//                new RangeGridSection<ImageViewHolder, Integer>(datas, 4) {
+//
+//
+//                    @Override
+//                    protected void decorLayoutHelper(RangeGridLayoutHelper layoutHelper) {
+//                        layoutHelper.setBgColor(Color.GREEN);
+//                        layoutHelper.setWeights(new float[]{10f, Float.NaN, 20f});
+//                        layoutHelper.setPadding(15, 15, 15, 15);
+//                        layoutHelper.setMargin(15, 15, 15, 15);
+//                        layoutHelper.setHGap(10);
+//                        layoutHelper.setVGap(10);
+//                        RangeGridLayoutHelper.GridRangeStyle rangeStyle = new RangeGridLayoutHelper.GridRangeStyle();
+//                        rangeStyle.setBgColor(Color.RED);
+//                        rangeStyle.setSpanCount(2);
+//                        rangeStyle.setWeights(new float[]{46.665f});
+//                        rangeStyle.setPadding(15, 15, 15, 15);
+//                        rangeStyle.setMargin(15, 15, 15, 15);
+//                        rangeStyle.setHGap(5);
+//                        rangeStyle.setVGap(5);
+//                        layoutHelper.addRangeStyle(4, 7, rangeStyle);
+//                        RangeGridLayoutHelper.GridRangeStyle rangeStyle1 = new RangeGridLayoutHelper.GridRangeStyle();
+//                        rangeStyle1.setBgColor(Color.YELLOW);
+//                        rangeStyle1.setSpanCount(2);
+//                        rangeStyle1.setWeights(new float[]{46.665f});
+//                        rangeStyle1.setPadding(15, 15, 15, 15);
+//                        rangeStyle1.setMargin(15, 15, 15, 15);
+//                        rangeStyle1.setHGap(5);
+//                        rangeStyle1.setVGap(5);
+//                        layoutHelper.addRangeStyle(8, 11, rangeStyle1);
+//                    }
+//
+//                    @Override
+//                    protected ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//                        return new ImageViewHolder(LayoutInflater.from(parent.getContext())
+//                                .inflate(R.layout.vl_section_item_h_scroll_rv, parent, false));
+//                    }
+//
+//                    @Override
+//                    protected void onBindViewHolder(ImageViewHolder holder, int position, Integer itemData) {
+//                        holder.itemView.setLayoutParams(new VirtualLayoutManager
+//                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                                ViewGroup.LayoutParams.WRAP_CONTENT));
+//                        holder.imageView.setImageResource(itemData);
+//
+//                    }
+//                };
+//        return gridSection;
+//    }
+//
+//
+//    private StaggerSection<ImageViewHolder, String> newStaggerSection() {
+//
+//        ArrayList<String> datas = new ArrayList<>();
+//        for (int i = 0; i < 4; i++) {
+//            datas.addAll(urls);
+//        }
+//
+//
+//        StaggerSection<ImageViewHolder, String> gridSection =
+//                new StaggerSection<ImageViewHolder, String>(datas, 2) {
+//
+//
+//                    @Override
+//                    protected void decorLayoutHelper(StaggeredGridLayoutHelper layoutHelper) {
+//                        layoutHelper.setBgColor(ContextCompat.getColor(TestVLayoutComplex.this,
+//                                R.color.cwl_audio_divider_color));
+//                        layoutHelper.setGap(10);
+////                        layoutHelper.setWeights(new float[] {0.5f,0.5f});
+//                    }
+//
+//                    @Override
+//                    protected ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+//                        return new ImageViewHolder(LayoutInflater.from(parent.getContext())
+//                                .inflate(R.layout.vl_section_item_h_scroll_rv, parent, false));
+//                    }
+//
+//                    @Override
+//                    protected void onBindViewHolder(ImageViewHolder holder, int position, String itemData) {
+//                        holder.itemView.setLayoutParams(new VirtualLayoutManager
+//                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                                ViewGroup.LayoutParams.WRAP_CONTENT));
+//                        Glide.with(holder.itemView.getContext())
+//                                .load(itemData)
+//                                .into(holder.imageView);
+//
+//                    }
+//                };
+//        return gridSection;
+//    }
 
 
 }

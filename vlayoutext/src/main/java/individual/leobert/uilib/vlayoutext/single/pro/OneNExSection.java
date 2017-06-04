@@ -1,11 +1,11 @@
 package individual.leobert.uilib.vlayoutext.single.pro;
 
-import android.support.v7.widget.RecyclerView;
-
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelperEx;
 
 import java.util.List;
+
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlayoutext.single.onen </p>
@@ -15,14 +15,10 @@ import java.util.List;
  * Created by leobert on 2017/5/24.
  */
 
-public abstract class OneNExSection<VH extends RecyclerView.ViewHolder, ID>
-        extends OneNSection<VH,ID> {
+public abstract class OneNExSection<VH extends EventViewHolder, ID, IEL>
+        extends OneNSection<VH, ID, IEL> {
     public OneNExSection(List<ID> sectionData) {
         super(sectionData);
-    }
-
-    public OneNExSection(List<ID> sectionData, ViewHolderDecor decor) {
-        super(sectionData, decor);
     }
 
     @Override

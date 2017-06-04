@@ -1,6 +1,5 @@
 package individual.leobert.uilib.vlayoutext.single.pro;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
@@ -8,6 +7,7 @@ import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 
 import java.util.List;
 
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
 
 /**
@@ -18,7 +18,7 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
  * Created by leobert on 2017/5/24.
  */
 
-public abstract class OneNSection<VH extends RecyclerView.ViewHolder, ID>
+public abstract class OneNSection<VH extends EventViewHolder, ID,IEL>
         extends VLayoutSection< List<ID>> {
 
     private SectionAdapter<VH, ID> adapter;
@@ -29,14 +29,13 @@ public abstract class OneNSection<VH extends RecyclerView.ViewHolder, ID>
         initAdapter();
     }
 
-    public OneNSection(List<ID> sectionData,
-                       ViewHolderDecor decor) {
-        super(sectionData, decor);
-        initAdapter();
+    protected IEL newItemEventListener(final ID itemData,final int position) {
+        return null;
     }
 
+
     protected void initAdapter() {
-        adapter = new OneNSectionAdapter<VH, ID>(decor) {
+        adapter = new OneNSectionAdapter<VH, ID>() {
 
             @Override
             public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,8 +58,11 @@ public abstract class OneNSection<VH extends RecyclerView.ViewHolder, ID>
             }
 
             @Override
-            protected void onBindViewHolder2(VH holder, int position) {
+            public void onBindViewHolder(VH holder, int position) {
                 OneNSection.this.onBindViewHolder(holder,position,getSectionItemData(position));
+                IEL iel = newItemEventListener(getSectionItemData(position),position);
+                if (iel != null)
+                    holder.bindEventListener(iel);
             }
         };
     }
@@ -89,15 +91,7 @@ public abstract class OneNSection<VH extends RecyclerView.ViewHolder, ID>
 
     protected abstract void decorLayoutHelper(final OnePlusNLayoutHelper layoutHelper);
 
-    public static abstract class OneNSectionAdapter<VH extends RecyclerView.ViewHolder, ID>
+    public static abstract class OneNSectionAdapter<VH extends EventViewHolder, ID>
             extends SectionAdapter<VH, ID> {
-
-        public OneNSectionAdapter() { //unused
-        }
-
-        public OneNSectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
-            super(viewHolderDecor);
-        }
-
     }
 }

@@ -26,15 +26,15 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
         initAdapter();
     }
 
-    public SingleSection(SD sectionData, ViewHolderDecor decor) {
-        super(sectionData, decor);
-        initAdapter();
-    }
+//    public SingleSection(SD sectionData, ViewHolderDecor decor) {
+//        super(sectionData, decor);
+//        initAdapter();
+//    }
 
 
     protected void initAdapter() {
         //only "one" item in the whole recycleView,so we use sectionData(SD as ID)
-        adapter = new SingleSectionAdapter<VH, SD>(getViewHolderEventDecor()) {
+        adapter = new SingleSectionAdapter<VH, SD>() {
 
             @Override
             public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,7 +48,7 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
             }
 
             @Override
-            public void onBindViewHolder2(VH holder, int position) {
+            public void onBindViewHolder(VH holder, int position) {
                 SingleSection.this.onBindViewHolder(holder);
             }
         };
@@ -67,13 +67,6 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
 
     public static abstract class SingleSectionAdapter<VH extends RecyclerView.ViewHolder, ID>
             extends SectionAdapter<VH, ID> {
-
-        public SingleSectionAdapter() { //unused
-        }
-
-        public SingleSectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
-            super(viewHolderDecor);
-        }
 
         @Override
         public LayoutHelper onCreateLayoutHelper() {
