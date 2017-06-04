@@ -64,7 +64,7 @@ public abstract class VLayoutSection<SD> {
         public abstract ID getSectionItemData(int position);
 
         @Override
-        public final void onBindViewHolder(VH holder, int position) {
+        public void onBindViewHolder(VH holder, int position) {
             onBindViewHolder2(holder, position);
             if (viewHolderDecor != null)
                 viewHolderDecor.decor(holder, getSectionItemData(position), position);

@@ -1,6 +1,5 @@
 package individual.leobert.uilib.vlayout;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +16,7 @@ import individual.leobert.uilib.vlayoutext.EventViewHolder;
  */
 
 public class LinearViewHolderSample extends
-        EventViewHolder<LinearViewHolderSample.IEventListener> {
+        EventViewHolder {
     ImageView ivBG;
     ImageView ivAvatar;
     TextView tvUsername;
@@ -30,9 +29,25 @@ public class LinearViewHolderSample extends
     }
 
     @Override
-    public void bindEvent(IEventListener listener) {
-
+    protected <I> void onEventListenerSet(I listener) {
+        if (listener instanceof IEventListener) {
+            bindListener((IEventListener) listener);
+        }
     }
+
+    private void bindListener(final IEventListener listener) {
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onAvatarClick();
+            }
+        });
+    }
+
+//    @Override
+//    public void bindEvent(IEventListener listener) {
+//
+//    }
 
     private void init() {
         ivBG = (ImageView) itemView.findViewById(R.id.iv_bg);
@@ -55,7 +70,7 @@ public class LinearViewHolderSample extends
 //                .into(ivAvatar);
     }
 
-    public interface IEventListener extends EventViewHolder.IEventListener{
+    public interface IEventListener {
         void onAvatarClick();
     }
 }

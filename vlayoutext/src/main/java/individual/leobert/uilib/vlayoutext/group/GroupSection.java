@@ -7,6 +7,7 @@ import com.alibaba.android.vlayout.LayoutHelper;
 
 import java.util.List;
 
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
 
 /**
@@ -17,7 +18,7 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
  * Created by leobert on 2017/5/23.
  */
 
-public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
+public abstract class GroupSection<VH extends EventViewHolder, ID,IEL>
         extends VLayoutSection<List<ID>> {
 
     private GroupSectionAdapter<VH,ID> adapter;
@@ -30,6 +31,10 @@ public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
     public GroupSection(List<ID> sectionData, ViewHolderDecor<VH,ID> decor) {
         super(sectionData, decor);
         initAdapter();
+    }
+
+    protected IEL newItemEventListener(final ID itemData,final int position) {
+        return null;
     }
 
     @Override
@@ -64,6 +69,9 @@ public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
             @Override
             public void onBindViewHolder2(VH holder, int position) {
                 GroupSection.this.onBindViewHolder(holder,position,getSectionItemData(position));
+                IEL iel = newItemEventListener(getSectionItemData(position),position);
+                if (iel != null)
+                    holder.bindEventListener(iel);
             }
         };
     }
@@ -86,7 +94,7 @@ public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
      */
     protected abstract void onBindViewHolder(VH holder, int position, ID itemData);
 
-    public static abstract class GroupSectionAdapter<VH extends RecyclerView.ViewHolder, ID>
+    public static abstract class GroupSectionAdapter<VH extends EventViewHolder, ID>
             extends SectionAdapter<VH, ID> {
 
         public GroupSectionAdapter() { //unused
@@ -96,5 +104,10 @@ public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
             super(viewHolderDecor);
         }
 
+//        @Override
+//        public void onBindViewHolder(VH holder, int position) {
+//            super.onBindViewHolder(holder, position);
+//            holder.bindEventListener();
+//        }
     }
 }

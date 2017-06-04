@@ -11,15 +11,18 @@ import android.view.View;
  * Created by leobert on 2017/6/2.
  */
 
-public abstract class EventViewHolder<I extends EventViewHolder.IEventListener>
+public abstract class EventViewHolder
         extends RecyclerView.ViewHolder {
     public EventViewHolder(View itemView) {
         super(itemView);
     }
 
-    protected abstract void bindEventListener(I listener);
-
-    public interface IEventListener {
-
+    public final <I> void bindEventListener(I listener) {
+        if (listener != null ) {
+            onEventListenerSet(listener);
+        }
     }
+
+    protected abstract <I> void onEventListenerSet(I listener);
+
 }
