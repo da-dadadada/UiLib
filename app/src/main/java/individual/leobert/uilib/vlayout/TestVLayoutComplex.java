@@ -193,8 +193,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
     private BannerSection newBannerSection() {
 
         BannerSection<BannerSectionViewHolder> section =
-                new BannerSection<BannerSectionViewHolder>(urls, new VLayoutSection.
-                        ViewHolderEventDecor<BannerSectionViewHolder, List<String>>() {
+                new BannerSection<BannerSectionViewHolder>(urls, new VLayoutSection.ViewHolderDecor<BannerSectionViewHolder, List<String>>() {
                     @Override
                     public void decor(BannerSectionViewHolder holder, final List<String> itemData, int position) {
                         holder.getBannerLayout().setOnBannerItemClickListener(new AutoLooperBanner.OnBannerItemClickListener() {
@@ -224,8 +223,8 @@ public class TestVLayoutComplex extends AppCompatActivity {
     }
 
     private ListSection<LinearViewHolderSample, Data1> newListSection(List<Data1> datas) {
-        VLayoutSection.ViewHolderEventDecor<LinearViewHolderSample, Data1> eventDecor =
-                new VLayoutSection.ViewHolderEventDecor<LinearViewHolderSample, Data1>() {
+        VLayoutSection.ViewHolderDecor<LinearViewHolderSample, Data1> eventDecor =
+                new VLayoutSection.ViewHolderDecor<LinearViewHolderSample, Data1>() {
                     @Override
                     public void decor(LinearViewHolderSample holder, Data1 itemData, int position) {
                         holder.ivAvatar.setOnClickListener(new View.OnClickListener() {
@@ -279,8 +278,8 @@ public class TestVLayoutComplex extends AppCompatActivity {
 
 
     private GridSection<ImageViewHolder, Integer> newGrideSection() {
-        VLayoutSection.ViewHolderEventDecor<ImageViewHolder, Integer> eventDecor =
-                new VLayoutSection.ViewHolderEventDecor<ImageViewHolder, Integer>() {
+        VLayoutSection.ViewHolderDecor<ImageViewHolder, Integer> eventDecor =
+                new VLayoutSection.ViewHolderDecor<ImageViewHolder, Integer>() {
                     @Override
                     public void decor(ImageViewHolder holder, Integer itemData, int position) {
                         holder.imageView.setOnClickListener(new View.OnClickListener() {
@@ -429,6 +428,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
                 };
         return gridSection;
     }
+
 
 
 }

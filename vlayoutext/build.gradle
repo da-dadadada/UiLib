@@ -10,8 +10,8 @@ apply plugin: 'com.jfrog.bintray'
 // 组织
 group = "individual.leobert.libs"
 
-// 根节点添加
-version = "1.0.0"
+// 修改bannerSection
+version = "1.0.1"
 
 // 根节点添加
 def siteUrl = 'https://github.com/leobert-lan/UiLib'    // project homepage
@@ -24,8 +24,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 100
-        versionName "1.0.0"
+        versionCode 101
+        versionName "1.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

@@ -21,7 +21,7 @@ public abstract class OneNExSection<VH extends RecyclerView.ViewHolder, ID>
         super(sectionData);
     }
 
-    public OneNExSection(List<ID> sectionData, ViewHolderEventDecor decor) {
+    public OneNExSection(List<ID> sectionData, ViewHolderDecor decor) {
         super(sectionData, decor);
     }
 

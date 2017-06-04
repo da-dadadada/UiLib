@@ -26,7 +26,7 @@ public abstract class StaggerSection<VH extends RecyclerView.ViewHolder, ID>
     }
 
     public StaggerSection(List<ID> sectionData, int lanes,
-                       ViewHolderEventDecor decor) {
+                       ViewHolderDecor decor) {
         super(sectionData, decor);
         this.lanes = lanes;
     }

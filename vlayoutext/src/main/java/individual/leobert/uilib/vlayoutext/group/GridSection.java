@@ -26,7 +26,7 @@ public abstract class GridSection<VH extends RecyclerView.ViewHolder, ID>
     }
 
     public GridSection(List<ID> sectionData, int spanCount,
-                       ViewHolderEventDecor decor) {
+                       ViewHolderDecor decor) {
         super(sectionData, decor);
         this.spanCount = spanCount;
     }

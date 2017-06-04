@@ -26,7 +26,7 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
         initAdapter();
     }
 
-    public SingleSection(SD sectionData, ViewHolderEventDecor decor) {
+    public SingleSection(SD sectionData, ViewHolderDecor decor) {
         super(sectionData, decor);
         initAdapter();
     }
@@ -71,8 +71,8 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
         public SingleSectionAdapter() { //unused
         }
 
-        public SingleSectionAdapter(ViewHolderEventDecor<VH, ID> viewHolderEventDecor) {
-            super(viewHolderEventDecor);
+        public SingleSectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
+            super(viewHolderDecor);
         }
 
         @Override

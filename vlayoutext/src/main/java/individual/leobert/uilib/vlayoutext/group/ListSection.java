@@ -24,7 +24,7 @@ public abstract class ListSection<VH extends RecyclerView.ViewHolder, ID>
     }
 
     public ListSection(List<ID> sectionData,
-                       ViewHolderEventDecor decor) {
+                       ViewHolderDecor decor) {
         super(sectionData, decor);
     }
 

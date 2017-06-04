@@ -9,7 +9,6 @@ import java.util.List;
 
 import individual.leobert.uilib.autolooperbanner.AutoLooperBanner;
 import individual.leobert.uilib.autolooperbanner.IBannerUpdate;
-import individual.leobert.uilib.vlayoutext.VLayoutSection;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlext </p>
@@ -27,7 +26,7 @@ public abstract class BannerSection<VH extends BannerSection.BannerSectionViewHo
     }
 
     public BannerSection(List<String> sectionData,
-                         VLayoutSection.ViewHolderEventDecor decor) {
+                         ViewHolderDecor decor) {
         super(sectionData, decor);
     }
 

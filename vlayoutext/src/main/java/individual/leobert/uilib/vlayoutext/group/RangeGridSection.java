@@ -22,7 +22,7 @@ public abstract class RangeGridSection<VH extends RecyclerView.ViewHolder, ID>
         super(sectionData, spanCount);
     }
 
-    public RangeGridSection(List<ID> sectionData, int spanCount, ViewHolderEventDecor decor) {
+    public RangeGridSection(List<ID> sectionData, int spanCount, ViewHolderDecor decor) {
         super(sectionData, spanCount, decor);
     }
 

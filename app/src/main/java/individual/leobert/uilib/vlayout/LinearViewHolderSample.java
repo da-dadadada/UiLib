@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import individual.leobert.uilib.R;
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlayout </p>
@@ -15,7 +16,8 @@ import individual.leobert.uilib.R;
  * Created by leobert on 2017/5/22.
  */
 
-public class LinearViewHolderSample extends RecyclerView.ViewHolder {
+public class LinearViewHolderSample extends
+        EventViewHolder<LinearViewHolderSample.IEventListener> {
     ImageView ivBG;
     ImageView ivAvatar;
     TextView tvUsername;
@@ -25,6 +27,11 @@ public class LinearViewHolderSample extends RecyclerView.ViewHolder {
     public LinearViewHolderSample(View itemView) {
         super(itemView);
         init();
+    }
+
+    @Override
+    public void bindEvent(IEventListener listener) {
+
     }
 
     private void init() {
@@ -46,5 +53,9 @@ public class LinearViewHolderSample extends RecyclerView.ViewHolder {
 //                .load(R.drawable.v1000_drawable_avatar_default)
 //                .fitCenter()
 //                .into(ivAvatar);
+    }
+
+    public interface IEventListener extends EventViewHolder.IEventListener{
+        void onAvatarClick();
     }
 }

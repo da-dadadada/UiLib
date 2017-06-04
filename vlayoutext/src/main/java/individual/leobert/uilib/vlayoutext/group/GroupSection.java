@@ -27,7 +27,7 @@ public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
         initAdapter();
     }
 
-    public GroupSection(List<ID> sectionData, ViewHolderEventDecor decor) {
+    public GroupSection(List<ID> sectionData, ViewHolderDecor<VH,ID> decor) {
         super(sectionData, decor);
         initAdapter();
     }
@@ -92,8 +92,8 @@ public abstract class GroupSection<VH extends RecyclerView.ViewHolder, ID>
         public GroupSectionAdapter() { //unused
         }
 
-        public GroupSectionAdapter(ViewHolderEventDecor<VH, ID> viewHolderEventDecor) {
-            super(viewHolderEventDecor);
+        public GroupSectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
+            super(viewHolderDecor);
         }
 
     }

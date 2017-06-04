@@ -30,7 +30,7 @@ public abstract class OneNSection<VH extends RecyclerView.ViewHolder, ID>
     }
 
     public OneNSection(List<ID> sectionData,
-                       ViewHolderEventDecor decor) {
+                       ViewHolderDecor decor) {
         super(sectionData, decor);
         initAdapter();
     }
@@ -95,8 +95,8 @@ public abstract class OneNSection<VH extends RecyclerView.ViewHolder, ID>
         public OneNSectionAdapter() { //unused
         }
 
-        public OneNSectionAdapter(ViewHolderEventDecor<VH, ID> viewHolderEventDecor) {
-            super(viewHolderEventDecor);
+        public OneNSectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
+            super(viewHolderDecor);
         }
 
     }

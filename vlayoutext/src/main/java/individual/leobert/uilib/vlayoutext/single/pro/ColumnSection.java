@@ -30,7 +30,7 @@ public abstract class ColumnSection<VH extends RecyclerView.ViewHolder, ID>
     }
 
     public ColumnSection(List<ID> sectionData,
-                         ViewHolderEventDecor decor) {
+                         ViewHolderDecor decor) {
         super(sectionData, decor);
         initAdapter();
     }

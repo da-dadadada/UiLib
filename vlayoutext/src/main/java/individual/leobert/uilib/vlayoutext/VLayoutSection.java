@@ -21,19 +21,19 @@ public abstract class VLayoutSection<SD> {
 
     protected SD sectionData;
 
-    protected ViewHolderEventDecor decor = null;
+    protected ViewHolderDecor decor = null;
 
 
     public VLayoutSection(SD sectionData) {
         this.sectionData = sectionData;
     }
 
-    public VLayoutSection(SD sectionData, ViewHolderEventDecor decor) {
+    public VLayoutSection(SD sectionData, ViewHolderDecor decor) {
         this.sectionData = sectionData;
         this.decor = decor;
     }
 
-    protected final ViewHolderEventDecor getViewHolderEventDecor() {
+    protected final ViewHolderDecor getViewHolderEventDecor() {
         return decor;
     }
 
@@ -46,14 +46,14 @@ public abstract class VLayoutSection<SD> {
     public static abstract class SectionAdapter<VH extends RecyclerView.ViewHolder, ID>
             extends DelegateAdapter.Adapter<VH> {
 
-        ViewHolderEventDecor<VH, ID> viewHolderEventDecor;
+        ViewHolderDecor<VH, ID> viewHolderDecor;
 
         public SectionAdapter() {
             this(null);
         }
 
-        public SectionAdapter(ViewHolderEventDecor<VH, ID> viewHolderEventDecor) {
-            this.viewHolderEventDecor = viewHolderEventDecor;
+        public SectionAdapter(ViewHolderDecor<VH, ID> viewHolderDecor) {
+            this.viewHolderDecor = viewHolderDecor;
         }
 
         protected View useInflate(@LayoutRes int layout, @NonNull ViewGroup parent) {
@@ -66,17 +66,16 @@ public abstract class VLayoutSection<SD> {
         @Override
         public final void onBindViewHolder(VH holder, int position) {
             onBindViewHolder2(holder, position);
-            if (viewHolderEventDecor != null)
-                viewHolderEventDecor.decor(holder, getSectionItemData(position), position);
+            if (viewHolderDecor != null)
+                viewHolderDecor.decor(holder, getSectionItemData(position), position);
         }
 
         protected abstract void onBindViewHolder2(VH holder, int position);
     }
 
-    public abstract static class ViewHolderEventDecor<VH extends RecyclerView.ViewHolder, ID> {
+    public abstract static class ViewHolderDecor<VH extends RecyclerView.ViewHolder, ID> {
 
         public abstract void decor(VH holder, ID itemData, int position);
     }
-
 
 }
