@@ -18,18 +18,18 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
 
 public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
         extends VLayoutSection<SD> {
-    
-    private SingleSectionAdapter<VH, SD> adapter;
+
+    protected SingleSectionAdapter<VH, SD> adapter;
 
     public SingleSection(SD sectionData) {
         super(sectionData);
         initAdapter();
     }
 
-//    public SingleSection(SD sectionData, ViewHolderDecor decor) {
-//        super(sectionData, decor);
-//        initAdapter();
-//    }
+    public void resetData(SD sectionData) {
+        this.sectionData = sectionData;
+        getAdapter().notifyDataSetChanged();
+    }
 
 
     protected void initAdapter() {
@@ -60,10 +60,10 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
     }
 
     //only one type
-    abstract VH onCreateViewHolder(ViewGroup parent);
+    protected abstract VH onCreateViewHolder(ViewGroup parent);
 
     //only one instance,position always 0
-    abstract void onBindViewHolder(VH holder);
+    protected abstract void onBindViewHolder(VH holder);
 
     public static abstract class SingleSectionAdapter<VH extends RecyclerView.ViewHolder, ID>
             extends SectionAdapter<VH, ID> {
@@ -75,7 +75,7 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
 
 
         @Override
-        public final int getItemCount() {
+        public int getItemCount() {
             return 1;
         }
     }

@@ -36,14 +36,14 @@ public abstract class HorizonScrollSection<ID> extends
 
 
     @Override
-    HorizonScrollSectionViewHolder onCreateViewHolder(ViewGroup parent) {
+    protected HorizonScrollSectionViewHolder onCreateViewHolder(ViewGroup parent) {
         return new HorizonScrollSectionViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.vlext_section_horizon_scroll_rv, parent, false),
                 itemDecorations);
     }
 
     @Override
-    void onBindViewHolder(HorizonScrollSectionViewHolder holder) {
+    protected void onBindViewHolder(HorizonScrollSectionViewHolder holder) {
         holder.setRVAdapter(sectionRvAdapter);
     }
 
