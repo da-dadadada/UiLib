@@ -10,8 +10,8 @@ apply plugin: 'com.jfrog.bintray'
 // 组织
 group = "individual.leobert.libs"
 
-// for footer&header section
-version = "1.0.4"
+// 对group类型进行了扩展：数据改动时，通知变动考虑recyclerView通过额外方式添加的header导致的偏移
+version = "1.0.5"
 
 // 根节点添加
 def siteUrl = 'https://github.com/leobert-lan/UiLib'    // project homepage
@@ -24,8 +24,8 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 104
-        versionName "1.0.4"
+        versionCode 105
+        versionName "1.0.5"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

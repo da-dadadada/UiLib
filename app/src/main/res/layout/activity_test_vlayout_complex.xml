@@ -5,7 +5,12 @@
     android:layout_height="match_parent"
     tools:context="individual.leobert.uilib.vlayout.TestVLayoutComplex">
 
-    <android.support.v7.widget.RecyclerView
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/vlayout_complex"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"/>-->
+
+    <individual.leobert.uilib.lrecyclerview.LRecyclerView
         android:id="@+id/vlayout_complex"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

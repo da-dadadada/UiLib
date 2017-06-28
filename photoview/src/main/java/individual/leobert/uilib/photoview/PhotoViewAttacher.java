@@ -125,7 +125,7 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener, OnGe
         this.mMatrixValues = new float[9];
         this.mScrollEdge = 2;
         this.mScaleType = ImageView.ScaleType.FIT_CENTER;
-        this.mImageView = new WeakReference(imageView);
+        this.mImageView = new WeakReference<>(imageView);
         imageView.setDrawingCacheEnabled(true);
         imageView.setOnTouchListener(this);
         ViewTreeObserver observer = imageView.getViewTreeObserver();

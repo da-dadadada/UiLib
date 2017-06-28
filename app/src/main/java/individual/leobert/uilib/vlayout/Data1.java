@@ -12,13 +12,13 @@ import java.util.List;
  */
 
 public class Data1 {
-    public static List<Data1> genTest(int size) {
+    public static List<Data1> genTest(int size, String tag) {
         final ArrayList list = new ArrayList();
         for (int i = 0; i < size; i++) {
             Data1 data = new Data1();
             data.setUser("安倍" + i);
             data.setTitle("奥巴马的狗" + i);
-            data.setIntro("安倍是奥巴马的一条忠实的狗" + i);
+            data.setIntro("item:" + i + " of " + tag);
             list.add(data);
         }
         return list;

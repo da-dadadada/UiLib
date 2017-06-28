@@ -1,8 +1,8 @@
 package individual.leobert.uilib.vlayout;
 
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -12,15 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.android.vlayout.DelegateAdapter;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
-import com.alibaba.android.vlayout.layout.RangeGridLayoutHelper;
-import com.alibaba.android.vlayout.layout.StaggeredGridLayoutHelper;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -31,16 +29,22 @@ import individual.leobert.uilib.R;
 import individual.leobert.uilib.autolooperbanner.AutoLooperBanner;
 import individual.leobert.uilib.autolooperbanner.IBannerUpdate;
 import individual.leobert.uilib.autolooperbanner.ImgRes;
+import individual.leobert.uilib.lrecyclerview.LRecyclerView;
+import individual.leobert.uilib.lrecyclerview.ProgressStyle;
 import individual.leobert.uilib.vlayoutext.VLSectionAssembler;
-import individual.leobert.uilib.vlayoutext.VLayoutSection;
-import individual.leobert.uilib.vlayoutext.group.GridSection;
 import individual.leobert.uilib.vlayoutext.group.ListSection;
-import individual.leobert.uilib.vlayoutext.group.RangeGridSection;
-import individual.leobert.uilib.vlayoutext.group.StaggerSection;
 import individual.leobert.uilib.vlayoutext.single.BannerSection;
 
 public class TestVLayoutComplex extends AppCompatActivity {
     final List<String> urls = new ArrayList<>();
+    private DelegateAdapter delegateAdapter;
+
+    private int refreshTime = 0;
+    private int times = 0;
+
+    private ListSection<LinearViewHolderSample,
+            Data1,
+            LinearViewHolderSample.IEventListener> listSection;
 
     private IBannerUpdate iBannerUpdate = new IBannerUpdate() {
         @Override
@@ -61,7 +65,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
         urls.add("http://img5.imgtn.bdimg.com/it/u=2583054979,2860372508&fm=23&gp=0.jpg");
 
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.vlayout_complex);
+        final LRecyclerView recyclerView = (LRecyclerView) findViewById(R.id.vlayout_complex);
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -80,12 +84,10 @@ public class TestVLayoutComplex extends AppCompatActivity {
 
         layoutManager.setLayoutHelpers(helpers);
 
-        DelegateAdapter delegateAdapter = new DelegateAdapter(layoutManager, false);
+        delegateAdapter = new DelegateAdapter(layoutManager, false);
 
         //..................................
 
-//        delegateAdapter.addAdapter(new SubBannerAdapter(this, urls));
-//
         BannerSection bannerSection = newBannerSection();
 
         final List<String> urls2 = new ArrayList<>();
@@ -93,24 +95,66 @@ public class TestVLayoutComplex extends AppCompatActivity {
         urls2.addAll(urls);
         urls2.addAll(urls);
 
-//        delegateAdapter.addAdapter(bannerSection.getAdapter());
-//        delegateAdapter.addAdapter(newHSRVAdapter(urls2));
-//        delegateAdapter.addAdapter(newListSection(Data1.genTest(10)).getAdapter());
-//        delegateAdapter.addAdapter(newGrideSection().getAdapter());
-//        delegateAdapter.addAdapter(newRangeGridSection().getAdapter());
-
-//        recyclerView.setAdapter(delegateAdapter);
+        listSection = newListSection(Data1.genTest(4,"init"));
 
         VLSectionAssembler.getAssembler(recyclerView, delegateAdapter)
-                .add(bannerSection)
+//                .add(bannerSection)
 //                .add(newHSRVAdapter(urls2))
-                .add(newListSection(Data1.genTest(10)))
+                .add(listSection)
 //                .add(newGrideSection())
 //                .add(newRangeGridSection())
                 .assembler();
 
 
         delegateAdapter.notifyDataSetChanged();
+        initLRecyclerFeature(recyclerView);
+    }
+
+    private void initLRecyclerFeature(final LRecyclerView mRecyclerView) {
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallRotate);
+
+        TextView headerView = new TextView(this);
+        headerView.setText("header 1");
+        mRecyclerView.addHeaderView(headerView);
+
+        mRecyclerView.setLoadingListener(new LRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        refreshTime++;
+                        listSection.setData(Data1.genTest(4,"refresh "+refreshTime));
+                        times = 0;
+                        mRecyclerView.refreshComplete();
+                        mRecyclerView.setNoMore(false);
+                    }
+
+                }, 1000);            //refresh data here
+            }
+
+            @Override
+            public void onLoadMore() {
+                if (times < 1) {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            listSection.addData(new Data1(),mRecyclerView.getLHeadersCount());
+                            mRecyclerView.loadMoreComplete();
+                        }
+                    }, 1000);
+                } else {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            listSection.addData(new Data1(),mRecyclerView.getLHeadersCount());
+                            mRecyclerView.loadMoreComplete();
+                            mRecyclerView.setNoMore(true);
+
+                        }
+                    }, 1000);
+                }
+                times++;
+            }
+        });
     }
 
 
@@ -221,7 +265,10 @@ public class TestVLayoutComplex extends AppCompatActivity {
         return section;
     }
 
-    private ListSection<LinearViewHolderSample, Data1, LinearViewHolderSample.IEventListener> newListSection(List<Data1> datas) {
+    private ListSection<LinearViewHolderSample,
+            Data1,
+            LinearViewHolderSample.IEventListener>
+    newListSection(List<Data1> datas) {
 
 
         ListSection<LinearViewHolderSample,
@@ -248,7 +295,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
                     protected void decorLayoutHelper(LinearLayoutHelper layoutHelper) {
                         layoutHelper.setDividerHeight(10);
                         layoutHelper.setBgColor(ContextCompat.getColor(TestVLayoutComplex.this,
-                                R.color.colorAccent));
+                                android.R.color.transparent));
                         //test -> useless for linear
                         layoutHelper.setItemCount(5);
                     }
@@ -270,6 +317,10 @@ public class TestVLayoutComplex extends AppCompatActivity {
         return listSection;
     }
 
+
+    /////////////////////////////////
+    //  以下测试代码块暂时废弃
+    /////////////////////////////////
 
 //    private GridSection<ImageViewHolder, Integer> newGrideSection() {
 //        VLayoutSection.ViewHolderDecor<ImageViewHolder, Integer> eventDecor =

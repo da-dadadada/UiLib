@@ -104,15 +104,19 @@ public abstract class GroupSection<VH extends EventViewHolder, ID, IEL>
         getAdapter().notifyItemRangeRemoved(0, count);
     }
 
-    public void addData(ID itemData) {
+    /**
+     * @param itemData
+     * @param headers  recyclerView额外添加的header的数量
+     */
+    public void addData(ID itemData, int headers) {
         if (sectionData == null)
             return;
         int position = sectionData.size();
         sectionData.add(itemData);
-        getAdapter().notifyItemInserted(position);
+        getAdapter().notifyItemInserted(position + headers);
     }
 
-    public void addData(int position, ID itemData) {
+    public void addData(int position, ID itemData, int headers) {
         if (sectionData == null)
             return;
         if (position < 0)
@@ -120,10 +124,10 @@ public abstract class GroupSection<VH extends EventViewHolder, ID, IEL>
         if (position > sectionData.size())
             position = sectionData.size();
         sectionData.add(position, itemData);
-        getAdapter().notifyItemInserted(position);
+        getAdapter().notifyItemInserted(position + headers);
     }
 
-    public void addData(List<ID> datas) {
+    public void addData(List<ID> datas, int headers) {
         if (datas == null || datas.isEmpty())
             return;
         int start;
@@ -134,7 +138,7 @@ public abstract class GroupSection<VH extends EventViewHolder, ID, IEL>
             start = sectionData.size();
             sectionData.addAll(datas);
         }
-        getAdapter().notifyItemRangeInserted(start, datas.size());
+        getAdapter().notifyItemRangeInserted(start + headers, datas.size());
     }
 
     public void setData(List<ID> datas) {
@@ -151,23 +155,23 @@ public abstract class GroupSection<VH extends EventViewHolder, ID, IEL>
         return b;
     }
 
-    public boolean removeData(int position) {
+    public boolean removeData(int position, int headers) {
         if (sectionData == null)
             return false;
         if (position < 0 || position > sectionData.size())
             return false;
         sectionData.remove(position);
-        getAdapter().notifyItemRemoved(position);
+        getAdapter().notifyItemRemoved(position + headers);
         return true;
     }
 
-    public boolean replaceData(int position, ID itemData) {
+    public boolean replaceData(int position, ID itemData, int headers) {
         if (sectionData == null)
             return false;
         if (position < 0 || position > sectionData.size())
             return false;
         sectionData.set(position, itemData);
-        getAdapter().notifyItemChanged(position);
+        getAdapter().notifyItemChanged(position + headers);
         return true;
     }
 

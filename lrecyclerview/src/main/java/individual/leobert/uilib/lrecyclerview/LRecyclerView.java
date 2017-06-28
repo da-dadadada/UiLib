@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,7 @@ public class LRecyclerView extends RecyclerView {
     private View mFootView;
     private final RecyclerView.AdapterDataObserver mDataObserver = new DataObserver();
     private AppBarStateChangeListener.State appbarState = AppBarStateChangeListener.State.EXPANDED;
+
     public LRecyclerView(Context context) {
         this(context, null);
     }
@@ -69,7 +71,7 @@ public class LRecyclerView extends RecyclerView {
     }
 
     public void setFootViewText(String loading, String noMore) {
-        if(mFootView instanceof LoadingMoreFooter){
+        if (mFootView instanceof LoadingMoreFooter) {
             ((LoadingMoreFooter) mFootView).setLoadingHint(loading);
             ((LoadingMoreFooter) mFootView).setNoMoreHint(noMore);
         }
@@ -85,7 +87,7 @@ public class LRecyclerView extends RecyclerView {
 
     //根据header的ViewType判断是哪个header
     private View getHeaderViewByType(int itemType) {
-        if(!isHeaderType(itemType)) {
+        if (!isHeaderType(itemType)) {
             return null;
         }
         return mHeaderViews.get(itemType - HEADER_INIT_INDEX);
@@ -93,12 +95,12 @@ public class LRecyclerView extends RecyclerView {
 
     //判断一个type是否为HeaderType
     private boolean isHeaderType(int itemViewType) {
-        return  mHeaderViews.size() > 0 &&  sHeaderTypes.contains(itemViewType);
+        return mHeaderViews.size() > 0 && sHeaderTypes.contains(itemViewType);
     }
 
     //判断是否是XRecyclerView保留的itemViewType
     private boolean isReservedItemViewType(int itemViewType) {
-        if(itemViewType == TYPE_REFRESH_HEADER || itemViewType == TYPE_FOOTER || sHeaderTypes.contains(itemViewType)) {
+        if (itemViewType == TYPE_REFRESH_HEADER || itemViewType == TYPE_FOOTER || sHeaderTypes.contains(itemViewType)) {
             return true;
         } else {
             return false;
@@ -118,22 +120,24 @@ public class LRecyclerView extends RecyclerView {
         }
     }
 
-    public void setNoMore(boolean noMore){
+    public void setNoMore(boolean noMore) {
         isLoadingData = false;
         isNoMore = noMore;
         if (mFootView instanceof LoadingMoreFooter) {
-            ((LoadingMoreFooter) mFootView).setState(isNoMore ? LoadingMoreFooter.STATE_NOMORE:LoadingMoreFooter.STATE_COMPLETE);
+            ((LoadingMoreFooter) mFootView).setState(isNoMore ? LoadingMoreFooter.STATE_NOMORE : LoadingMoreFooter.STATE_COMPLETE);
         } else {
             mFootView.setVisibility(View.GONE);
         }
     }
+
     public void refresh() {
         if (pullRefreshEnabled && mLoadingListener != null) {
             mRefreshHeader.setState(ArrowRefreshHeader.STATE_REFRESHING);
             mLoadingListener.onRefresh();
         }
     }
-    public void reset(){
+
+    public void reset() {
         setNoMore(false);
         loadMoreComplete();
         refreshComplete();
@@ -156,7 +160,7 @@ public class LRecyclerView extends RecyclerView {
         loadingMoreEnabled = enabled;
         if (!enabled) {
             if (mFootView instanceof LoadingMoreFooter) {
-                ((LoadingMoreFooter)mFootView).setState(LoadingMoreFooter.STATE_COMPLETE);
+                ((LoadingMoreFooter) mFootView).setState(LoadingMoreFooter.STATE_COMPLETE);
             }
         }
     }
@@ -201,16 +205,23 @@ public class LRecyclerView extends RecyclerView {
     //避免用户自己调用getAdapter() 引起的ClassCastException
     @Override
     public Adapter getAdapter() {
-        if(mWrapAdapter != null)
+        if (mWrapAdapter != null)
             return mWrapAdapter.getOriginalAdapter();
         else
             return null;
     }
 
+    /**
+     * @return 一个刷新头和增加的头部
+     */
+    public int getLHeadersCount() {
+        return 1 + mWrapAdapter.getHeadersCount();
+    }
+
     @Override
     public void setLayoutManager(LayoutManager layout) {
         super.setLayoutManager(layout);
-        if(mWrapAdapter != null){
+        if (mWrapAdapter != null) {
             if (layout instanceof GridLayoutManager) {
                 final GridLayoutManager gridManager = ((GridLayoutManager) layout);
                 gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -326,31 +337,41 @@ public class LRecyclerView extends RecyclerView {
             }
         }
 
+
+
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            mWrapAdapter.notifyItemRangeInserted(positionStart, itemCount);
+            mWrapAdapter.notifyItemRangeInserted(positionStart,
+                    itemCount);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
-            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount);
+            mWrapAdapter.notifyItemRangeChanged(positionStart,
+                    itemCount);
         }
 
         @Override
-        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount, payload);
+        public void onItemRangeChanged(int positionStart, int itemCount,
+                                       Object payload) {
+            mWrapAdapter.notifyItemRangeChanged(positionStart,
+                    itemCount, payload);
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            mWrapAdapter.notifyItemRangeRemoved(positionStart, itemCount);
+            mWrapAdapter.notifyItemRangeRemoved(positionStart,
+                    itemCount);
         }
 
         @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+        public void onItemRangeMoved(int fromPosition, int toPosition,
+                                     int itemCount) {
             mWrapAdapter.notifyItemMoved(fromPosition, toPosition);
         }
-    };
+    }
+
+    ;
 
     private class WrapAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -360,7 +381,7 @@ public class LRecyclerView extends RecyclerView {
             this.adapter = adapter;
         }
 
-        public RecyclerView.Adapter getOriginalAdapter(){
+        public RecyclerView.Adapter getOriginalAdapter() {
             return this.adapter;
         }
 
@@ -369,9 +390,9 @@ public class LRecyclerView extends RecyclerView {
         }
 
         public boolean isFooter(int position) {
-            if(loadingMoreEnabled) {
+            if (loadingMoreEnabled) {
                 return position == getItemCount() - 1;
-            }else {
+            } else {
                 return false;
             }
         }
@@ -410,9 +431,10 @@ public class LRecyclerView extends RecyclerView {
                 }
             }
         }
+
         // some times we need to override this
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position,List<Object> payloads) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
             if (isHeader(position) || isRefreshHeader(position)) {
                 return;
             }
@@ -421,11 +443,10 @@ public class LRecyclerView extends RecyclerView {
             if (adapter != null) {
                 adapterCount = adapter.getItemCount();
                 if (adjPosition < adapterCount) {
-                    if(payloads.isEmpty()){
+                    if (payloads.isEmpty()) {
                         adapter.onBindViewHolder(holder, adjPosition);
-                    }
-                    else{
-                        adapter.onBindViewHolder(holder, adjPosition,payloads);
+                    } else {
+                        adapter.onBindViewHolder(holder, adjPosition, payloads);
                     }
                 }
             }
@@ -433,13 +454,13 @@ public class LRecyclerView extends RecyclerView {
 
         @Override
         public int getItemCount() {
-            if(loadingMoreEnabled) {
+            if (loadingMoreEnabled) {
                 if (adapter != null) {
                     return getHeadersCount() + adapter.getItemCount() + 2;
                 } else {
                     return getHeadersCount() + 2;
                 }
-            }else {
+            } else {
                 if (adapter != null) {
                     return getHeadersCount() + adapter.getItemCount() + 1;
                 } else {
@@ -465,9 +486,9 @@ public class LRecyclerView extends RecyclerView {
             if (adapter != null) {
                 adapterCount = adapter.getItemCount();
                 if (adjPosition < adapterCount) {
-                    int type =  adapter.getItemViewType(adjPosition);
-                    if(isReservedItemViewType(type)) {
-                        throw new IllegalStateException("XRecyclerView require itemViewType in adapter should be less than 10000 " );
+                    int type = adapter.getItemViewType(adjPosition);
+                    if (isReservedItemViewType(type)) {
+                        throw new IllegalStateException("XRecyclerView require itemViewType in adapter should be less than 10000 ");
                     }
                     return type;
                 }
@@ -514,7 +535,7 @@ public class LRecyclerView extends RecyclerView {
             ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
             if (lp != null
                     && lp instanceof StaggeredGridLayoutManager.LayoutParams
-                    && (isHeader(holder.getLayoutPosition()) ||isRefreshHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
+                    && (isHeader(holder.getLayoutPosition()) || isRefreshHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
                 StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
                 p.setFullSpan(true);
             }
@@ -576,17 +597,17 @@ public class LRecyclerView extends RecyclerView {
             }
             p = p.getParent();
         }
-        if(p instanceof CoordinatorLayout) {
-            CoordinatorLayout coordinatorLayout = (CoordinatorLayout)p;
+        if (p instanceof CoordinatorLayout) {
+            CoordinatorLayout coordinatorLayout = (CoordinatorLayout) p;
             final int childCount = coordinatorLayout.getChildCount();
             for (int i = childCount - 1; i >= 0; i--) {
                 final View child = coordinatorLayout.getChildAt(i);
-                if(child instanceof AppBarLayout) {
-                    appBarLayout = (AppBarLayout)child;
+                if (child instanceof AppBarLayout) {
+                    appBarLayout = (AppBarLayout) child;
                     break;
                 }
             }
-            if(appBarLayout != null) {
+            if (appBarLayout != null) {
                 appBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
                     @Override
                     public void onStateChanged(AppBarLayout appBarLayout, State state) {
@@ -617,7 +638,7 @@ public class LRecyclerView extends RecyclerView {
          *
          * @param canvas The {@link Canvas} onto which dividers will be drawn
          * @param parent The RecyclerView onto which dividers are being added
-         * @param state The current RecyclerView.State of the RecyclerView
+         * @param state  The current RecyclerView.State of the RecyclerView
          */
         @Override
         public void onDraw(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
@@ -634,9 +655,9 @@ public class LRecyclerView extends RecyclerView {
          *
          * @param outRect The {@link Rect} of offsets to be added around the child
          *                view
-         * @param view The child view to be decorated with an offset
-         * @param parent The RecyclerView onto which dividers are being added
-         * @param state The current RecyclerView.State of the RecyclerView
+         * @param view    The child view to be decorated with an offset
+         * @param parent  The RecyclerView onto which dividers are being added
+         * @param state   The current RecyclerView.State of the RecyclerView
          */
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
