@@ -44,7 +44,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/VideoActivityTheme.Full" />
         <activity android:name=".TestNineImage" />
-        <activity android:name=".GuideActivity"></activity>
+        <activity android:name=".GuideActivity" />
+        <activity android:name=".TestArcMenu"></activity>
     </application>
 
 </manifest>

@@ -23,6 +23,7 @@ public class TestListActivity extends AppCompatActivity implements View.OnClickL
         testPool.put(R.id.test_video2, TestVideoActivity2.class);
         testPool.put(R.id.test_nine_img,TestNineImage.class);
         testPool.put(R.id.test_guide,GuideActivity.class);
+        testPool.put(R.id.test_arc,TestArcMenu.class);
     }
 
 
