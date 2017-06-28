@@ -1,1 +1,1 @@
-include ':app', ':actionsheet', ':numbadge', ':autolooperbanner', ':photoview', ':vlayoutext', ':videoplayer', ':nineimagesetview', ':fabmenu', ':arcmenu'
+include ':app', ':actionsheet', ':numbadge', ':autolooperbanner', ':photoview', ':vlayoutext', ':videoplayer', ':nineimagesetview', ':fabmenu', ':arcmenu', ':lrecyclerview'
