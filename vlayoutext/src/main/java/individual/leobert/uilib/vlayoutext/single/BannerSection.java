@@ -1,7 +1,9 @@
 package individual.leobert.uilib.vlayoutext.single;
 
 import android.view.View;
+import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import individual.leobert.uilib.autolooperbanner.AutoLooperBanner;
@@ -29,9 +31,8 @@ public abstract class BannerSection extends
 
     @Override
     public BannerSection.BannerSectionViewHolder onCompatCreateViewHolder(View contentView, View originView) {
-        if (originView instanceof AutoLooperBanner)
-            return new BannerSectionViewHolder((AutoLooperBanner) originView);
-        return null;
+
+        return new BannerSectionViewHolder(contentView);
     }
 
 
@@ -62,9 +63,31 @@ public abstract class BannerSection extends
             return bannerLayout;
         }
 
-        public BannerSectionViewHolder(AutoLooperBanner bannerLayout) {
-            super(bannerLayout);
-            this.bannerLayout = bannerLayout;
+        public BannerSectionViewHolder(View itemView) {
+            super(itemView);
+            this.bannerLayout = getAutoLooperBanner(itemView);
+            if (bannerLayout == null)
+                throw new IllegalArgumentException("itemView must be neither" +
+                        "instance of AutoLooperBanner or contains ALB");
+        }
+
+        private AutoLooperBanner getAutoLooperBanner(View itemView) {
+            if (itemView instanceof AutoLooperBanner)
+                return (AutoLooperBanner) itemView;
+            List<View> unvisited = new ArrayList<>();
+            unvisited.add(itemView);
+            while (!unvisited.isEmpty()) {
+                View child = unvisited.remove(0);
+                if (!(child instanceof ViewGroup)) { // view
+                    continue;
+                }
+                if (child instanceof AutoLooperBanner)
+                    return (AutoLooperBanner) child;
+                ViewGroup group = (ViewGroup) child;
+                final int childCount = group.getChildCount();
+                for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
+            }
+            return null;
         }
 
         @Override

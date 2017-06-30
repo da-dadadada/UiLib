@@ -38,13 +38,14 @@ public class SectionAdapter<VH extends EventViewHolder, ID,IEL>
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
         View originView = onCreateItemView(parent, viewType);
-        View decorView = onCreateDecorItemView(originView, viewType);
+        View decorView = onCreateDecorItemView(parent,originView, viewType);
 
         return onCompatCreateViewHolder(decorView, originView, viewType);
     }
 
 
-    protected View onCreateDecorItemView(View originView, int viewType) {
+    protected View onCreateDecorItemView(ViewGroup viewGroup,
+                                         View originView, int viewType) {
         return originView;
     }
 

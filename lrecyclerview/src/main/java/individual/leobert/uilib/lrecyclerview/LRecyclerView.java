@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.IntDef;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,14 +12,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+
+import individual.leobert.uilib.lrecyclerview.swipe.OnSwipeMenuItemClickListener;
+import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenuCreator;
+import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenuLayout;
+import individual.leobert.uilib.lrecyclerview.swipe.touch.DefaultItemTouchHelper;
+import individual.leobert.uilib.lrecyclerview.swipe.touch.OnItemMoveListener;
+import individual.leobert.uilib.lrecyclerview.swipe.touch.OnItemMovementListener;
+import individual.leobert.uilib.lrecyclerview.swipe.touch.OnItemStateChangedListener;
 
 public class LRecyclerView extends RecyclerView {
     private boolean isLoadingData = false;
@@ -46,6 +57,55 @@ public class LRecyclerView extends RecyclerView {
     private final RecyclerView.AdapterDataObserver mDataObserver = new DataObserver();
     private AppBarStateChangeListener.State appbarState = AppBarStateChangeListener.State.EXPANDED;
 
+    ///////////////
+    // swipe define
+    ///////////////
+
+    /**
+     * Left menu.
+     */
+    public static final int LEFT_DIRECTION = 1;
+    /**
+     * Right menu.
+     */
+    public static final int RIGHT_DIRECTION = -1;
+
+    @IntDef({LEFT_DIRECTION, RIGHT_DIRECTION})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface DirectionMode {
+    }
+
+    /**
+     * Invalid position.
+     */
+    private static final int INVALID_POSITION = -1;
+
+    protected int mScaleTouchSlop;
+    protected SwipeMenuLayout mOldSwipedLayout;
+    protected int mOldTouchedPosition = INVALID_POSITION;
+
+    private int mDownX;
+    private int mDownY;
+
+    private boolean allowSwipeDelete = false;
+
+    private SwipeMenuCreator mSwipeMenuCreator;
+    private OnSwipeMenuItemClickListener mSwipeMenuItemClickListener;
+    private DefaultItemTouchHelper mDefaultItemTouchHelper;
+
+
+    private void initializeItemTouchHelper() {
+        if (mDefaultItemTouchHelper == null) {
+            mDefaultItemTouchHelper = new DefaultItemTouchHelper();
+            mDefaultItemTouchHelper.attachToRecyclerView(this);
+        }
+    }
+
+
+    ///////////////
+    // swipe end
+    ///////////////
+
     public LRecyclerView(Context context) {
         this(context, null);
     }
@@ -68,6 +128,8 @@ public class LRecyclerView extends RecyclerView {
         footView.setProgressStyle(mLoadingMoreProgressStyle);
         mFootView = footView;
         mFootView.setVisibility(GONE);
+
+        mScaleTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     public void setFootViewText(String loading, String noMore) {
@@ -98,9 +160,11 @@ public class LRecyclerView extends RecyclerView {
         return mHeaderViews.size() > 0 && sHeaderTypes.contains(itemViewType);
     }
 
-    //判断是否是XRecyclerView保留的itemViewType
+    //判断是否是LRecyclerView保留的itemViewType
     private boolean isReservedItemViewType(int itemViewType) {
-        if (itemViewType == TYPE_REFRESH_HEADER || itemViewType == TYPE_FOOTER || sHeaderTypes.contains(itemViewType)) {
+        if (itemViewType == TYPE_REFRESH_HEADER
+                || itemViewType == TYPE_FOOTER
+                || sHeaderTypes.contains(itemViewType)) {
             return true;
         } else {
             return false;
@@ -274,6 +338,13 @@ public class LRecyclerView extends RecyclerView {
                 mLastY = ev.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
+                //for swipe
+                if (mOldSwipedLayout != null && mOldSwipedLayout.isMenuOpen()) {
+                    mOldSwipedLayout.smoothCloseMenu();
+                    break;
+                }
+
+                // for ptr
                 final float deltaY = ev.getRawY() - mLastY;
                 mLastY = ev.getRawY();
                 if (isOnTop() && pullRefreshEnabled && appbarState == AppBarStateChangeListener.State.EXPANDED) {
@@ -369,7 +440,23 @@ public class LRecyclerView extends RecyclerView {
         }
     }
 
-    ;
+    public boolean isRuledByRealAdapter(int position) {
+        if (mWrapAdapter.isRefreshHeader(position))
+            return false;
+        if (mWrapAdapter.isHeader(position))
+            return false;
+        if (mWrapAdapter.isFooter(position))
+            return false;
+        return true;
+    }
+
+    public int getPositionInRealAdapter(int position) {
+        if (isRuledByRealAdapter(position))
+            return position - getLHeadersCount();
+        throw new IllegalArgumentException("this position is not in real adapter," +
+                "use isRuledByRealAdapter(int position) for check");
+    }
+
 
     private class WrapAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -486,7 +573,7 @@ public class LRecyclerView extends RecyclerView {
                 if (adjPosition < adapterCount) {
                     int type = adapter.getItemViewType(adjPosition);
                     if (isReservedItemViewType(type)) {
-                        throw new IllegalStateException("XRecyclerView require itemViewType in adapter should be less than 10000 ");
+                        throw new IllegalStateException("LRecyclerView require itemViewType in adapter should be less than 10000 ");
                     }
                     return type;
                 }
@@ -726,4 +813,304 @@ public class LRecyclerView extends RecyclerView {
             }
         }
     }
+
+    //////////////////
+    // for swipe
+    //////////////////
+
+    /**
+     * Set OnItemMoveListener.
+     *
+     * @param onItemMoveListener {@link OnItemMoveListener}.
+     */
+    public void setOnItemMoveListener(OnItemMoveListener onItemMoveListener) {
+        initializeItemTouchHelper();
+        mDefaultItemTouchHelper.setOnItemMoveListener(onItemMoveListener);
+    }
+
+    /**
+     * Set OnItemMovementListener.
+     *
+     * @param onItemMovementListener {@link OnItemMovementListener}.
+     */
+    public void setOnItemMovementListener(OnItemMovementListener onItemMovementListener) {
+        initializeItemTouchHelper();
+        mDefaultItemTouchHelper.setOnItemMovementListener(onItemMovementListener);
+    }
+
+    /**
+     * Set OnItemStateChangedListener.
+     *
+     * @param onItemStateChangedListener {@link OnItemStateChangedListener}.
+     */
+    public void setOnItemStateChangedListener(OnItemStateChangedListener onItemStateChangedListener) {
+        this.mDefaultItemTouchHelper.setOnItemStateChangedListener(onItemStateChangedListener);
+    }
+
+    /**
+     * Get OnItemStateChangedListener.
+     *
+     * @return {@link OnItemStateChangedListener}.
+     */
+    public OnItemStateChangedListener getOnItemStateChangedListener() {
+        return this.mDefaultItemTouchHelper.getOnItemStateChangedListener();
+    }
+
+
+    /**
+     * Set can long press drag.
+     *
+     * @param canDrag drag true, otherwise is can't.
+     */
+    public void setLongPressDragEnabled(boolean canDrag) {
+        initializeItemTouchHelper();
+        mDefaultItemTouchHelper.setLongPressDragEnabled(canDrag);
+    }
+
+    /**
+     * Get can long press drag.
+     *
+     * @return drag true, otherwise is can't.
+     */
+    public boolean isLongPressDragEnabled() {
+        initializeItemTouchHelper();
+        return this.mDefaultItemTouchHelper.isLongPressDragEnabled();
+    }
+
+
+    /**
+     * Set can swipe delete.
+     *
+     * @param canSwipe swipe true, otherwise is can't.
+     */
+    public void setItemViewSwipeEnabled(boolean canSwipe) {
+        initializeItemTouchHelper();
+        allowSwipeDelete = canSwipe; // swipe and menu conflict.
+        mDefaultItemTouchHelper.setItemViewSwipeEnabled(canSwipe);
+    }
+
+    /**
+     * Get can long press swipe.
+     *
+     * @return swipe true, otherwise is can't.
+     */
+    public boolean isItemViewSwipeEnabled() {
+        initializeItemTouchHelper();
+        return this.mDefaultItemTouchHelper.isItemViewSwipeEnabled();
+    }
+
+    /**
+     * Start drag a item.
+     *
+     * @param viewHolder the ViewHolder to start dragging. It must be a direct child of RecyclerView.
+     */
+    public void startDrag(ViewHolder viewHolder) {
+        initializeItemTouchHelper();
+        mDefaultItemTouchHelper.startDrag(viewHolder);
+    }
+
+    /**
+     * Star swipe a item.
+     *
+     * @param viewHolder the ViewHolder to start swiping. It must be a direct child of RecyclerView.
+     */
+    public void startSwipe(ViewHolder viewHolder) {
+        initializeItemTouchHelper();
+        mDefaultItemTouchHelper.startSwipe(viewHolder);
+    }
+
+    /**
+     * Set to create menu listener.
+     *
+     * @param swipeMenuCreator listener.
+     */
+    public void setSwipeMenuCreator(SwipeMenuCreator swipeMenuCreator) {
+        this.mSwipeMenuCreator = swipeMenuCreator;
+    }
+
+    /**
+     * Set to click menu listener.
+     *
+     * @param swipeMenuItemClickListener listener.
+     */
+    public void setSwipeMenuItemClickListener(OnSwipeMenuItemClickListener swipeMenuItemClickListener) {
+        this.mSwipeMenuItemClickListener = swipeMenuItemClickListener;
+    }
+
+
+    /**
+     * open menu on left.
+     *
+     * @param position position.
+     */
+    public void smoothOpenLeftMenu(int position) {
+        smoothOpenMenu(position, LEFT_DIRECTION, SwipeMenuLayout.DEFAULT_SCROLLER_DURATION);
+    }
+
+    /**
+     * open menu on left.
+     *
+     * @param position position.
+     * @param duration time millis.
+     */
+    public void smoothOpenLeftMenu(int position, int duration) {
+        smoothOpenMenu(position, LEFT_DIRECTION, duration);
+    }
+
+    /**
+     * open menu on right.
+     *
+     * @param position position.
+     */
+    public void smoothOpenRightMenu(int position) {
+        smoothOpenMenu(position, RIGHT_DIRECTION, SwipeMenuLayout.DEFAULT_SCROLLER_DURATION);
+    }
+
+    /**
+     * open menu on right.
+     *
+     * @param position position.
+     * @param duration time millis.
+     */
+    public void smoothOpenRightMenu(int position, int duration) {
+        smoothOpenMenu(position, RIGHT_DIRECTION, duration);
+    }
+
+    /**
+     * open menu.
+     *
+     * @param position  position.
+     * @param direction use {@link #LEFT_DIRECTION}, {@link #RIGHT_DIRECTION}.
+     * @param duration  time millis.
+     */
+    public void smoothOpenMenu(int position, @DirectionMode int direction,
+                               int duration) {
+        if (mOldSwipedLayout != null) {
+            if (mOldSwipedLayout.isMenuOpen()) {
+                mOldSwipedLayout.smoothCloseMenu();
+            }
+        }
+        ViewHolder vh = findViewHolderForAdapterPosition(position);
+        if (vh != null) {
+            View itemView = getSwipeMenuView(vh.itemView);
+            if (itemView instanceof SwipeMenuLayout) {
+                mOldSwipedLayout = (SwipeMenuLayout) itemView;
+                if (direction == RIGHT_DIRECTION) {
+                    mOldTouchedPosition = position;
+                    mOldSwipedLayout.smoothOpenRightMenu(duration);
+                } else if (direction == LEFT_DIRECTION) {
+                    mOldTouchedPosition = position;
+                    mOldSwipedLayout.smoothOpenLeftMenu(duration);
+                }
+            }
+        }
+    }
+
+    /**
+     * Close menu.
+     */
+    public void smoothCloseMenu() {
+        if (mOldSwipedLayout != null && mOldSwipedLayout.isMenuOpen()) {
+            mOldSwipedLayout.smoothCloseMenu();
+        }
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent e) {
+        boolean isIntercepted = super.onInterceptTouchEvent(e);
+        if (allowSwipeDelete)  // swipe and menu conflict.
+            return isIntercepted;
+        else {
+            if (e.getPointerCount() > 1) return true;
+            int action = e.getAction();
+            int x = (int) e.getX();
+            int y = (int) e.getY();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN: {
+                    mDownX = x;
+                    mDownY = y;
+                    isIntercepted = false;
+
+                    int touchingPosition = getChildAdapterPosition(findChildViewUnder(x, y));
+                    if (touchingPosition != mOldTouchedPosition
+                            && mOldSwipedLayout != null
+                            && mOldSwipedLayout.isMenuOpen()) {
+                        mOldSwipedLayout.smoothCloseMenu();
+                        isIntercepted = true;
+                    }
+
+                    if (isIntercepted) {
+                        mOldSwipedLayout = null;
+                        mOldTouchedPosition = INVALID_POSITION;
+                    } else {
+                        ViewHolder vh = findViewHolderForAdapterPosition(touchingPosition);
+                        if (vh != null) {
+                            View itemView = getSwipeMenuView(vh.itemView);
+                            if (itemView instanceof SwipeMenuLayout) {
+                                mOldSwipedLayout = (SwipeMenuLayout) itemView;
+                                mOldTouchedPosition = touchingPosition;
+                            }
+                        }
+                    }
+                    break;
+                }
+                // They are sensitive to retain sliding and inertia.
+                case MotionEvent.ACTION_MOVE: {
+                    isIntercepted = handleUnDown(x, y, isIntercepted);
+                    if (mOldSwipedLayout == null) break;
+                    ViewParent viewParent = getParent();
+                    if (viewParent == null) break;
+
+                    int disX = mDownX - x;
+                    // 向左滑，显示右侧菜单，或者关闭左侧菜单。
+                    boolean showRightCloseLeft = disX > 0 && (mOldSwipedLayout.hasRightMenu() || mOldSwipedLayout
+                            .isLeftCompleteOpen());
+                    // 向右滑，显示左侧菜单，或者关闭右侧菜单。
+                    boolean showLeftCloseRight = disX < 0 && (mOldSwipedLayout.hasLeftMenu() || mOldSwipedLayout
+                            .isRightCompleteOpen());
+                    viewParent.requestDisallowInterceptTouchEvent(showRightCloseLeft || showLeftCloseRight);
+                }
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL: {
+                    isIntercepted = handleUnDown(x, y, isIntercepted);
+                    break;
+                }
+            }
+
+
+        }
+        return isIntercepted;
+    }
+
+    private boolean handleUnDown(int x, int y, boolean defaultValue) {
+        int disX = mDownX - x;
+        int disY = mDownY - y;
+
+        // swipe
+        if (Math.abs(disX) > mScaleTouchSlop && Math.abs(disX) > Math.abs(disY))
+            return false;
+        // click
+        if (Math.abs(disY) < mScaleTouchSlop && Math.abs(disX) < mScaleTouchSlop)
+            return false;
+        return defaultValue;
+    }
+
+
+    private View getSwipeMenuView(View itemView) {
+        if (itemView instanceof SwipeMenuLayout) return itemView;
+        List<View> unvisited = new ArrayList<>();
+        unvisited.add(itemView);
+        while (!unvisited.isEmpty()) {
+            View child = unvisited.remove(0);
+            if (!(child instanceof ViewGroup)) { // view
+                continue;
+            }
+            if (child instanceof SwipeMenuLayout) return child;
+            ViewGroup group = (ViewGroup) child;
+            final int childCount = group.getChildCount();
+            for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
+        }
+        return itemView;
+    }
+
 }

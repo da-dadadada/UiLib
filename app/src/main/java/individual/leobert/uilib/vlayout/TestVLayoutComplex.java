@@ -1,5 +1,7 @@
 package individual.leobert.uilib.vlayout;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +32,13 @@ import individual.leobert.uilib.autolooperbanner.IBannerUpdate;
 import individual.leobert.uilib.autolooperbanner.ImgRes;
 import individual.leobert.uilib.lrecyclerview.LRecyclerView;
 import individual.leobert.uilib.lrecyclerview.ProgressStyle;
+import individual.leobert.uilib.lrecyclerview.swipe.Closeable;
+import individual.leobert.uilib.lrecyclerview.swipe.OnSwipeMenuItemClickListener;
+import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenu;
+import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenuAdapterHelper;
+import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenuCreator;
+import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenuItem;
+import individual.leobert.uilib.temp.MAdapter;
 import individual.leobert.uilib.vlayoutext.VLSectionAssembler;
 import individual.leobert.uilib.vlayoutext.group.ListSection;
 import individual.leobert.uilib.vlayoutext.single.BannerSection;
@@ -55,6 +64,94 @@ public class TestVLayoutComplex extends AppCompatActivity {
                     .into(imageView);
         }
     };
+
+    private Context getContext() {
+        return this;
+    }
+
+    private SwipeMenuAdapterHelper swipeMenuAdapterHelper;
+
+    /**
+     * 菜单创建器。在Item要创建菜单的时候调用。
+     */
+    private SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
+        @Override
+        public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
+            int width = getResources().getDimensionPixelSize(R.dimen.item_height);
+
+            // MATCH_PARENT 自适应高度，保持和内容一样高；也可以指定菜单具体高度，也可以用WRAP_CONTENT。
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+
+            // 添加左侧的，如果不添加，则左侧不会出现菜单。
+            {
+                SwipeMenuItem addItem = new SwipeMenuItem(getContext())
+                        .setBackgroundDrawable(R.drawable.selector_green)// 点击的背景。
+                        .setImage(R.mipmap.ic_action_add) // 图标。
+                        .setWidth(width) // 宽度。
+                        .setHeight(height); // 高度。
+                swipeLeftMenu.addMenuItem(addItem); // 添加一个按钮到左侧菜单。
+
+                SwipeMenuItem closeItem = new SwipeMenuItem(getContext())
+                        .setBackgroundDrawable(R.drawable.selector_red)
+                        .setImage(R.mipmap.ic_action_close)
+                        .setWidth(width)
+                        .setHeight(height);
+
+                swipeLeftMenu.addMenuItem(closeItem); // 添加一个按钮到左侧菜单。
+            }
+
+            // 添加右侧的，如果不添加，则右侧不会出现菜单。
+            {
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getContext())
+                        .setBackgroundDrawable(R.drawable.selector_red)
+                        .setImage(R.mipmap.ic_action_delete)
+                        .setText("删除") // 文字，还可以设置文字颜色，大小等。。
+                        .setTextColor(Color.WHITE)
+                        .setWidth(width)
+                        .setHeight(height);
+                swipeRightMenu.addMenuItem(deleteItem);// 添加一个按钮到右侧侧菜单。
+
+                SwipeMenuItem closeItem = new SwipeMenuItem(getContext())
+                        .setBackgroundDrawable(R.drawable.selector_purple)
+                        .setImage(R.mipmap.ic_action_close)
+                        .setWidth(width)
+                        .setHeight(height);
+                swipeRightMenu.addMenuItem(closeItem); // 添加一个按钮到右侧菜单。
+
+                SwipeMenuItem addItem = new SwipeMenuItem(getContext())
+                        .setBackgroundDrawable(R.drawable.selector_green)
+                        .setText("添加")
+                        .setTextColor(Color.WHITE)
+                        .setWidth(width)
+                        .setHeight(height);
+                swipeRightMenu.addMenuItem(addItem); // 添加一个按钮到右侧菜单。
+            }
+        }
+    };
+
+
+    /**
+     * 菜单点击监听。
+     */
+    private OnSwipeMenuItemClickListener menuItemClickListener = new OnSwipeMenuItemClickListener() {
+
+        @Override
+        public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
+            closeable.smoothCloseMenu();// 关闭被点击的菜单。
+
+            if (direction == LRecyclerView.RIGHT_DIRECTION) {
+                Toast.makeText(getBaseContext(), "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
+            } else if (direction == LRecyclerView.LEFT_DIRECTION) {
+                Toast.makeText(getBaseContext(), "list第" + adapterPosition + "; 左侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
+            }
+
+            // TODO 如果是删除：推荐调用Adapter.notifyItemRemoved(position)，不推荐Adapter.notifyDataSetChanged();
+            if (menuPosition == 0) {// 删除按钮被点击。
+
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +184,12 @@ public class TestVLayoutComplex extends AppCompatActivity {
 
         //..................................
 
+        swipeMenuAdapterHelper = new SwipeMenuAdapterHelper();
+        swipeMenuAdapterHelper.setSwipeMenuCreator(swipeMenuCreator);
+        swipeMenuAdapterHelper.setSwipeMenuItemClickListener(menuItemClickListener);
+
+        //............................
+
         BannerSection bannerSection = newBannerSection();
 
         final List<String> urls2 = new ArrayList<>();
@@ -95,7 +198,6 @@ public class TestVLayoutComplex extends AppCompatActivity {
         urls2.addAll(urls);
 
         listSection = newListSection(Data1.genTest(4, "init"));
-
         VLSectionAssembler.getAssembler(recyclerView, delegateAdapter)
                 .add(bannerSection)
 //                .add(newHSRVAdapter(urls2))
@@ -221,11 +323,11 @@ public class TestVLayoutComplex extends AppCompatActivity {
     private BannerSection newBannerSection() {
 
         BannerSection section =
-                new BannerSection(urls,iBannerUpdate) {
+                new BannerSection(urls, iBannerUpdate) {
                     @Override
                     public View onCreateItemView(ViewGroup parent) {
                         ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.vlext_section_banner,parent,false);
+                                .inflate(R.layout.vlext_section_banner, parent, false);
                         AutoLooperBanner autoLooperBanner =
                                 (AutoLooperBanner) viewGroup.findViewById(R.id.vlext_banner);
                         viewGroup.removeView(autoLooperBanner);
@@ -237,14 +339,18 @@ public class TestVLayoutComplex extends AppCompatActivity {
                         return new AutoLooperBanner.OnBannerItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
-                               final String msg = "click:" + position + "\r\nurl:" +
+                                final String msg = "click:" + position + "\r\nurl:" +
                                         getItemDataByPosition(position);
                                 Log.d("lmsg", msg);
-                                Toast.makeText(TestVLayoutComplex.this,msg,Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TestVLayoutComplex.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         };
                     }
                 };
+//        MAdapter<BannerSection.BannerSectionViewHolder, List<String>, Void> mAdapter
+//                = new MAdapter<>(section);
+//        mAdapter.setSwipeMenuAdapterHelper(swipeMenuAdapterHelper);
+//        section.setAdapter(mAdapter);
         return section;
     }
 
@@ -290,6 +396,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
                                     Toast.makeText(TestVLayoutComplex.this, "avatar", Toast.LENGTH_SHORT).show();
                                     getItemDataByPosition(position).setTitle("changed title");
                                     getAdapter().notifyItemChanged(position + recyclerView.getLHeadersCount());
+
                                 }
                             };
                         }
@@ -306,6 +413,10 @@ public class TestVLayoutComplex extends AppCompatActivity {
                         layoutHelper.setItemCount(5);
                     }
                 };
+        MAdapter<LinearViewHolderSample, Data1,
+                LinearViewHolderSample.IEventListener> adapter = new MAdapter<>(listSection);
+        adapter.setSwipeMenuAdapterHelper(swipeMenuAdapterHelper);
+        listSection.setSectionAdapter(adapter);
         return listSection;
     }
 

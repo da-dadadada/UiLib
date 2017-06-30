@@ -3,11 +3,13 @@ package individual.leobert.uilib.lrecyclerview.swipe;
 import android.view.View;
 import android.widget.OverScroller;
 
+import individual.leobert.uilib.lrecyclerview.LRecyclerView;
+
 
 class SwipeLeftHorizontal extends SwipeHorizontal {
 
     public SwipeLeftHorizontal(View menuView) {
-        super(SwipeMenuRecyclerView.LEFT_DIRECTION, menuView);
+        super(LRecyclerView.LEFT_DIRECTION, menuView);
     }
 
     @Override

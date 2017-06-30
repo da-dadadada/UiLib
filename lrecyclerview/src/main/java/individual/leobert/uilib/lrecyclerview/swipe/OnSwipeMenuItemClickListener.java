@@ -1,5 +1,7 @@
 package individual.leobert.uilib.lrecyclerview.swipe;
 
+import individual.leobert.uilib.lrecyclerview.LRecyclerView;
+
 public interface OnSwipeMenuItemClickListener {
 
     /**
@@ -8,8 +10,9 @@ public interface OnSwipeMenuItemClickListener {
      * @param closeable       closeable.
      * @param adapterPosition adapterPosition.
      * @param menuPosition    menuPosition.
-     * @param direction       can be {@link SwipeMenuRecyclerView#LEFT_DIRECTION}, {@link SwipeMenuRecyclerView#RIGHT_DIRECTION}.
+     * @param direction       can be {@link LRecyclerView#LEFT_DIRECTION}, {@link LRecyclerView#RIGHT_DIRECTION}.
      */
-    void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, @SwipeMenuRecyclerView.DirectionMode int direction);
+    void onItemClick(Closeable closeable, int adapterPosition,
+                     int menuPosition, @LRecyclerView.DirectionMode int direction);
 
 }
