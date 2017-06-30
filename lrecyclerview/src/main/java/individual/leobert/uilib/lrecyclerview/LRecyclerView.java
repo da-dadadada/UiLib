@@ -337,8 +337,6 @@ public class LRecyclerView extends RecyclerView {
             }
         }
 
-
-
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
             mWrapAdapter.notifyItemRangeInserted(positionStart,

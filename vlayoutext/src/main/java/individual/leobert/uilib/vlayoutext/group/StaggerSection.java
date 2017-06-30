@@ -25,8 +25,9 @@ public abstract class StaggerSection<VH extends EventViewHolder, ID,IEL>
         this.lanes = lanes;
     }
 
+
     @Override
-    LayoutHelper onCreateLayoutHelper() {
+    public LayoutHelper createLayoutHelper() {
         final StaggeredGridLayoutHelper layoutHelper = new StaggeredGridLayoutHelper(lanes);
         decorLayoutHelper(layoutHelper);
         return layoutHelper;

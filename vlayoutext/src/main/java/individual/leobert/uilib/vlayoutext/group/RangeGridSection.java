@@ -22,8 +22,10 @@ public abstract class RangeGridSection<VH extends EventViewHolder, ID,IEL>
         super(sectionData, spanCount);
     }
 
+
+
     @Override
-    LayoutHelper onCreateLayoutHelper() {
+    public LayoutHelper createLayoutHelper() {
         final RangeGridLayoutHelper gridLayoutHelper = new RangeGridLayoutHelper(spanCount);
         decorLayoutHelper(gridLayoutHelper);
         return gridLayoutHelper;

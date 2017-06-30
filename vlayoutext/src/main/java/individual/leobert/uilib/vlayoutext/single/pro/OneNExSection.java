@@ -1,6 +1,7 @@
 package individual.leobert.uilib.vlayoutext.single.pro;
 
 import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelper;
 import com.alibaba.android.vlayout.layout.OnePlusNLayoutHelperEx;
 
 import java.util.List;
@@ -22,7 +23,17 @@ public abstract class OneNExSection<VH extends EventViewHolder, ID, IEL>
     }
 
     @Override
-    LayoutHelper onCreateLayoutHelper() {
-        return new OnePlusNLayoutHelperEx(getSectionData().size());
+    protected void decorLayoutHelper(OnePlusNLayoutHelper layoutHelper) {
+//        ignore
+    }
+
+    protected abstract void decorLayoutHelper(OnePlusNLayoutHelperEx layoutHelper);
+
+    @Override
+    public LayoutHelper createLayoutHelper() {
+        final OnePlusNLayoutHelperEx layoutHelper =
+                new OnePlusNLayoutHelperEx(getSectionData().size());
+        decorLayoutHelper(layoutHelper);
+        return layoutHelper;
     }
 }

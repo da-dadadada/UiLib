@@ -25,17 +25,13 @@ public abstract class ListSection<VH extends EventViewHolder, ID,IEL>
         super(sectionData);
     }
 
-//    public ListSection(List<ID> sectionData,
-//                       ViewHolderDecor decor) {
-//        super(sectionData, decor);
-//    }
-
     @Override
-    LayoutHelper onCreateLayoutHelper() {
+    public LayoutHelper createLayoutHelper() {
         final LinearLayoutHelper linearLayoutHelper = new LinearLayoutHelper();
         decorLayoutHelper(linearLayoutHelper);
         return linearLayoutHelper;
     }
+
 
     protected abstract void decorLayoutHelper(final LinearLayoutHelper layoutHelper);
 }

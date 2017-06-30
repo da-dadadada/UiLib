@@ -26,7 +26,7 @@ public abstract class GridSection<VH extends EventViewHolder, ID,IEL>
     }
 
     @Override
-    LayoutHelper onCreateLayoutHelper() {
+    public LayoutHelper createLayoutHelper() {
         final GridLayoutHelper gridLayoutHelper = new GridLayoutHelper(spanCount);
         decorLayoutHelper(gridLayoutHelper);
         return gridLayoutHelper;

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 import individual.leobert.uilib.vlayoutext.R;
 
 /**
@@ -19,7 +20,7 @@ import individual.leobert.uilib.vlayoutext.R;
  */
 
 public abstract class HorizonScrollSection<ID> extends
-        SingleSection<HorizonScrollSection.HorizonScrollSectionViewHolder,ID> {
+        SingleSection<HorizonScrollSection.HorizonScrollSectionViewHolder, ID> {
 
     private RecyclerView.Adapter sectionRvAdapter;
 
@@ -36,18 +37,23 @@ public abstract class HorizonScrollSection<ID> extends
 
 
     @Override
-    protected HorizonScrollSectionViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new HorizonScrollSectionViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.vlext_section_horizon_scroll_rv, parent, false),
-                itemDecorations);
-    }
-
-    @Override
-    protected void onBindViewHolder(HorizonScrollSectionViewHolder holder) {
+    public void onBindViewHolder(HorizonScrollSectionViewHolder holder,
+                                 int position, ID itemData) {
         holder.setRVAdapter(sectionRvAdapter);
     }
 
-    public static class HorizonScrollSectionViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public HorizonScrollSectionViewHolder onCompatCreateViewHolder(View contentView, View originView) {
+        return new HorizonScrollSectionViewHolder(contentView, itemDecorations);
+    }
+
+    @Override
+    public View onCreateItemView(ViewGroup parent) {
+        return LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.vlext_section_horizon_scroll_rv, parent, false);
+    }
+
+    public static class HorizonScrollSectionViewHolder extends EventViewHolder {
 
         RecyclerView recyclerView;
 
@@ -74,6 +80,11 @@ public abstract class HorizonScrollSection<ID> extends
         @Deprecated
         public void notifyDataSetChanged() {
             recyclerView.getAdapter().notifyDataSetChanged();
+        }
+
+        @Override
+        protected <I> void onEventListenerSet(I listener) {
+
         }
     }
 }

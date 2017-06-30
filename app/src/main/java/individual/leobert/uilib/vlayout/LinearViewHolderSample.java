@@ -39,15 +39,11 @@ public class LinearViewHolderSample extends
         ivAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onAvatarClick();
+                listener.onAvatarClick(getPositionInSection());
             }
         });
     }
 
-//    @Override
-//    public void bindEvent(IEventListener listener) {
-//
-//    }
 
     private void init() {
         ivBG = (ImageView) itemView.findViewById(R.id.iv_bg);
@@ -64,13 +60,9 @@ public class LinearViewHolderSample extends
 
         ivAvatar.setImageResource(R.drawable.v1000_drawable_avatar_default);
 
-//        Glide.with(itemView.getContext())
-//                .load(R.drawable.v1000_drawable_avatar_default)
-//                .fitCenter()
-//                .into(ivAvatar);
     }
 
     public interface IEventListener {
-        void onAvatarClick();
+        void onAvatarClick(int position);
     }
 }

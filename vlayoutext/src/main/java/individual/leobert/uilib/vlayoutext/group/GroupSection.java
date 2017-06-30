@@ -1,8 +1,6 @@
 package individual.leobert.uilib.vlayoutext.group;
 
-import android.view.ViewGroup;
-
-import com.alibaba.android.vlayout.LayoutHelper;
+import android.support.annotation.NonNull;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,6 +8,8 @@ import java.util.List;
 
 import individual.leobert.uilib.vlayoutext.EventViewHolder;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
+import individual.leobert.uilib.vlayoutext.core.ISectionAdapterComponent;
+import individual.leobert.uilib.vlayoutext.core.SectionAdapter;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlayoutext.group </p>
@@ -20,80 +20,61 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
  */
 
 public abstract class GroupSection<VH extends EventViewHolder, ID, IEL>
-        extends VLayoutSection<List<ID>> {
+        extends VLayoutSection<List<ID>>
+        implements ISectionAdapterComponent<ID, VH ,IEL> {
 
-    private GroupSectionAdapter<VH, ID> adapter;
+    private List<ID> sectionData;
 
-    public GroupSection(List<ID> sectionData) {
-        super(sectionData);
-        initAdapter();
-    }
+    private SectionAdapter<VH,ID,IEL> sectionAdapter;
 
-    protected IEL newItemEventListener(final ID itemData, final int position) {
-        return null;
+    public GroupSection(@NonNull List<ID> sectionData) {
+        this.sectionData = sectionData;
+        sectionAdapter = new SectionAdapter<>(this);
     }
 
     @Override
     public List<ID> getSectionData() {
-        return super.getSectionData();
-    }
-
-    private void initAdapter() {
-        adapter = new GroupSectionAdapter<VH, ID>() {
-
-            @Override
-            public LayoutHelper onCreateLayoutHelper() {
-                return GroupSection.this.onCreateLayoutHelper();
-            }
-
-            @Override
-            public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-                return GroupSection.this.onCreateViewHolder(parent, viewType);
-            }
-
-            @Override
-            public int getItemCount() {
-                return GroupSection.this.getSectionData().size();
-            }
-
-            @Override
-            public ID getSectionItemData(int position) {
-                return GroupSection.this.getSectionData().get(position);
-            }
-
-
-            @Override
-            public void onBindViewHolder(VH holder, int position) {
-                GroupSection.this.onBindViewHolder(holder, position, getSectionItemData(position));
-                IEL iel = newItemEventListener(getSectionItemData(position), position);
-                if (iel != null)
-                    holder.bindEventListener(iel);
-            }
-        };
+        return sectionData;
     }
 
     @Override
-    public GroupSectionAdapter<VH, ID> getAdapter() {
-        return adapter;
+    public SectionAdapter getAdapter() {
+        return sectionAdapter;
     }
 
-    abstract LayoutHelper onCreateLayoutHelper();
-
-    protected abstract VH onCreateViewHolder(ViewGroup parent, int viewType);
-
-
-    /**
-     * jobs:update the viewHolder with the itemData,position is prepare for future-use
-     *
-     * @param holder   viewHolder
-     * @param position currentPosition in the section
-     * @param itemData data for this
-     */
-    protected abstract void onBindViewHolder(VH holder, int position, ID itemData);
-
-    public static abstract class GroupSectionAdapter<VH extends EventViewHolder, ID>
-            extends SectionAdapter<VH, ID> {
+    public void setSectionAdapter(SectionAdapter<VH, ID, IEL> sectionAdapter) {
+        this.sectionAdapter = sectionAdapter;
     }
+
+    @Override
+    public ID getItemDataByPosition(int position) {
+        return sectionData.get(position);
+    }
+
+    @Override
+    public int getItemDataCount() {
+        return sectionData.size();
+    }
+
+//    @Override
+//    public IEL getItemEventListener() {
+//        return null;
+//    }
+//
+//    @Override
+//    public LayoutHelper createLayoutHelper() {
+//        return null;
+//    }
+//
+//    @Override
+//    public VH onCompatCreateViewHolder(View contentView, View originView, int viewType) {
+//        return null;
+//    }
+//
+//    @Override
+//    public View onCreateItemView(ViewGroup parent, int viewType) {
+//        return null;
+//    }
 
 
     public void clearData() {

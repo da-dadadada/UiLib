@@ -1,12 +1,15 @@
 package individual.leobert.uilib.vlayoutext.single;
 
-import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 
+import individual.leobert.uilib.vlayoutext.EventViewHolder;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
+import individual.leobert.uilib.vlayoutext.core.ISectionAdapterComponent;
+import individual.leobert.uilib.vlayoutext.core.SectionAdapter;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlext </p>
@@ -16,14 +19,20 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
  * Created by leobert on 2017/5/22.
  */
 
-public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
-        extends VLayoutSection<SD> {
+public abstract class SingleSection<VH extends EventViewHolder, SD>
+        extends VLayoutSection<SD>
+        implements ISectionAdapterComponent<SD,VH,Void> {
 
-    protected SingleSectionAdapter<VH, SD> adapter;
+    protected SectionAdapter<VH, SD,Void> adapter;
+    private SD sectionData;
 
     public SingleSection(SD sectionData) {
-        super(sectionData);
-        initAdapter();
+        this.sectionData = sectionData;
+        adapter = new SectionAdapter<>(this);
+    }
+
+    public void setAdapter(SectionAdapter<VH, SD, Void> adapter) {
+        this.adapter = adapter;
     }
 
     public void resetData(SD sectionData) {
@@ -32,51 +41,48 @@ public abstract class SingleSection<VH extends RecyclerView.ViewHolder, SD>
     }
 
 
-    protected void initAdapter() {
-        //only "one" item in the whole recycleView,so we use sectionData(SD as ID)
-        adapter = new SingleSectionAdapter<VH, SD>() {
-
-            @Override
-            public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-                return SingleSection.this.onCreateViewHolder(parent);
-            }
-
-            @Override
-            public SD getSectionItemData(int position) {
-                //only one item
-                return SingleSection.this.getSectionData();
-            }
-
-            @Override
-            public void onBindViewHolder(VH holder, int position) {
-                SingleSection.this.onBindViewHolder(holder);
-            }
-        };
+    @Override
+    public SD getSectionData() {
+        return sectionData;
     }
 
     @Override
-    public SingleSectionAdapter<VH, SD> getAdapter() {
+    public SectionAdapter getAdapter() {
         return adapter;
     }
 
-    //only one type
-    protected abstract VH onCreateViewHolder(ViewGroup parent);
+    public abstract VH onCompatCreateViewHolder(View contentView, View originView);
 
-    //only one instance,position always 0
-    protected abstract void onBindViewHolder(VH holder);
+    public abstract View onCreateItemView(ViewGroup parent);
 
-    public static abstract class SingleSectionAdapter<VH extends RecyclerView.ViewHolder, ID>
-            extends SectionAdapter<VH, ID> {
+    @Override
+    public SD getItemDataByPosition(int position) {
+        //only one item need data
+        return sectionData;
+    }
 
-        @Override
-        public LayoutHelper onCreateLayoutHelper() {
-            return new SingleLayoutHelper();
-        }
+    @Override
+    public int getItemDataCount() {
+        return 1;
+    }
 
+    @Override
+    public Void getItemEventListener() {
+        return null;
+    }
 
-        @Override
-        public int getItemCount() {
-            return 1;
-        }
+    @Override
+    public LayoutHelper createLayoutHelper() {
+        return new SingleLayoutHelper();
+    }
+
+    @Override
+    public VH onCompatCreateViewHolder(View contentView, View originView, int viewType) {
+        return onCompatCreateViewHolder(contentView, originView);
+    }
+
+    @Override
+    public View onCreateItemView(ViewGroup parent, int viewType) {
+        return onCreateItemView(parent);
     }
 }

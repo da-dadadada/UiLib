@@ -13,8 +13,17 @@ import android.view.View;
 
 public abstract class EventViewHolder
         extends RecyclerView.ViewHolder {
+    private int positionInSection;
     public EventViewHolder(View itemView) {
         super(itemView);
+    }
+
+    public void setPositionInSection(int positionInSection) {
+        this.positionInSection = positionInSection;
+    }
+
+    public int getPositionInSection() {
+        return positionInSection;
     }
 
     public final <I> void bindEventListener(I listener) {

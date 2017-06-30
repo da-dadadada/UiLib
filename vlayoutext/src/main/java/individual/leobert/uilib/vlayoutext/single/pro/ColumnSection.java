@@ -1,5 +1,7 @@
 package individual.leobert.uilib.vlayoutext.single.pro;
 
+import android.support.annotation.NonNull;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
@@ -9,6 +11,8 @@ import java.util.List;
 
 import individual.leobert.uilib.vlayoutext.EventViewHolder;
 import individual.leobert.uilib.vlayoutext.VLayoutSection;
+import individual.leobert.uilib.vlayoutext.core.ISectionAdapterComponent;
+import individual.leobert.uilib.vlayoutext.core.SectionAdapter;
 
 /**
  * <p><b>Package:</b> individual.leobert.uilib.vlayoutext.single.pro </p>
@@ -18,85 +22,58 @@ import individual.leobert.uilib.vlayoutext.VLayoutSection;
  * Created by leobert on 2017/5/24.
  */
 
-public abstract class ColumnSection<VH extends EventViewHolder, ID,IEL>
-        extends VLayoutSection< List<ID>> {
+public abstract class ColumnSection<VH extends EventViewHolder, ID, IEL>
+        extends VLayoutSection<List<ID>>
+        implements ISectionAdapterComponent<ID, VH, IEL> {
 
-    private SectionAdapter<VH, ID> adapter;
+    private SectionAdapter<VH, ID, IEL> adapter;
+    private List<ID> sectionData;
 
 
-    public ColumnSection(List<ID> sectionData) {
-        super(sectionData);
-        initAdapter();
+    public ColumnSection(@NonNull List<ID> sectionData) {
+        this.sectionData = sectionData;
+        setAdapter(new SectionAdapter<>(this));
     }
 
-    protected IEL newItemEventListener(final ID itemData,final int position) {
-        return null;
+
+    public void setAdapter(SectionAdapter<VH, ID, IEL> adapter) {
+        this.adapter = adapter;
     }
 
 
-//    public ColumnSection(List<ID> sectionData,
-//                         ViewHolderDecor decor) {
-//        super(sectionData, decor);
-//        initAdapter();
-//    }
-
-    protected void initAdapter() {
-        adapter = new SectionAdapter<VH, ID>() {
-
-            @Override
-            public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-                return ColumnSection.this.onCreateViewHolder(parent, viewType);
-            }
-
-            @Override
-            public int getItemCount() {
-                return ColumnSection.this.getSectionData().size();
-            }
-
-            @Override
-            public LayoutHelper onCreateLayoutHelper() {
-                return ColumnSection.this.onCreateLayoutHelper();
-            }
-
-            @Override
-            public ID getSectionItemData(int position) {
-                return ColumnSection.this.getSectionData().get(position);
-            }
-
-            @Override
-            public void onBindViewHolder(VH holder, int position) {
-                ColumnSection.this.onBindViewHolder(holder,
-                        position,getSectionItemData(position));
-                IEL iel = newItemEventListener(getSectionItemData(position),position);
-                if (iel != null)
-                    holder.bindEventListener(iel);
-            }
-        };
-    }
-
-    protected abstract VH onCreateViewHolder(ViewGroup parent, int viewType);
 
 
-    /**
-     * jobs:update the viewHolder with the itemData,position is prepare for future-use
-     * @param holder viewHolder
-     * @param position currentPosition in the section
-     * @param itemData data for this
-     */
-    protected abstract void onBindViewHolder(VH holder, int position, ID itemData);
 
     @Override
-    public SectionAdapter<VH, ID> getAdapter() {
+    public List<ID> getSectionData() {
+        return sectionData;
+    }
+
+    @Override
+    public SectionAdapter getAdapter() {
         return adapter;
     }
 
-    LayoutHelper onCreateLayoutHelper() {
-        final ColumnLayoutHelper columnLayoutHelper = new ColumnLayoutHelper();
+    @Override
+    public LayoutHelper createLayoutHelper() {
+         final ColumnLayoutHelper columnLayoutHelper =
+                new ColumnLayoutHelper();
         decorLayoutHelper(columnLayoutHelper);
         return columnLayoutHelper;
     }
 
+
     protected abstract void decorLayoutHelper(final ColumnLayoutHelper layoutHelper);
 
+
+    @Override
+    public ID getItemDataByPosition(int position) {
+        return sectionData.get(position);
+    }
+
+    @Override
+    public int getItemDataCount() {
+        return sectionData.size();
+    }
 
 }

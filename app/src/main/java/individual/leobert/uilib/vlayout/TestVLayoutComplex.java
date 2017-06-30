@@ -3,7 +3,6 @@ package individual.leobert.uilib.vlayout;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +40,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
 
     private int refreshTime = 0;
     private int times = 0;
+    private LRecyclerView recyclerView;
 
     private ListSection<LinearViewHolderSample,
             Data1,
@@ -64,8 +64,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
         urls.add("http://img4.imgtn.bdimg.com/it/u=1030604573,1579640549&fm=23&gp=0.jpg");
         urls.add("http://img5.imgtn.bdimg.com/it/u=2583054979,2860372508&fm=23&gp=0.jpg");
 
-
-        final LRecyclerView recyclerView = (LRecyclerView) findViewById(R.id.vlayout_complex);
+        recyclerView = (LRecyclerView) findViewById(R.id.vlayout_complex);
         final VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);
@@ -95,10 +94,10 @@ public class TestVLayoutComplex extends AppCompatActivity {
         urls2.addAll(urls);
         urls2.addAll(urls);
 
-        listSection = newListSection(Data1.genTest(4,"init"));
+        listSection = newListSection(Data1.genTest(4, "init"));
 
         VLSectionAssembler.getAssembler(recyclerView, delegateAdapter)
-//                .add(bannerSection)
+                .add(bannerSection)
 //                .add(newHSRVAdapter(urls2))
                 .add(listSection)
 //                .add(newGrideSection())
@@ -124,7 +123,7 @@ public class TestVLayoutComplex extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
                         refreshTime++;
-                        listSection.setData(Data1.genTest(4,"refresh "+refreshTime));
+                        listSection.setData(Data1.genTest(4, "refresh " + refreshTime));
                         times = 0;
                         mRecyclerView.refreshComplete();
                         mRecyclerView.setNoMore(false);
@@ -138,14 +137,14 @@ public class TestVLayoutComplex extends AppCompatActivity {
                 if (times < 1) {
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
-                            listSection.addData(new Data1(),mRecyclerView.getLHeadersCount());
+                            listSection.addData(new Data1(), mRecyclerView.getLHeadersCount());
                             mRecyclerView.loadMoreComplete();
                         }
                     }, 1000);
                 } else {
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
-                            listSection.addData(new Data1(),mRecyclerView.getLHeadersCount());
+                            listSection.addData(new Data1(), mRecyclerView.getLHeadersCount());
                             mRecyclerView.loadMoreComplete();
                             mRecyclerView.setNoMore(true);
 
@@ -219,77 +218,84 @@ public class TestVLayoutComplex extends AppCompatActivity {
         }
     }
 
-    private static class BannerSectionViewHolder
-            extends BannerSection.BannerSectionViewHolder {
-
-        public BannerSectionViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        @NonNull
-        @Override
-        protected AutoLooperBanner init(View itemView) {
-            return (AutoLooperBanner) itemView.findViewById(R.id.vlext_banner);
-        }
-    }
-
-
     private BannerSection newBannerSection() {
 
-        BannerSection<BannerSectionViewHolder> section =
-                new BannerSection<BannerSectionViewHolder>(urls) {
+        BannerSection section =
+                new BannerSection(urls,iBannerUpdate) {
                     @Override
-                    protected TestVLayoutComplex.BannerSectionViewHolder onCreateViewHolder(ViewGroup parent) {
-                        return new TestVLayoutComplex.BannerSectionViewHolder(
-                                LayoutInflater.from(parent.getContext())
-                                        .inflate(R.layout.vlext_section_banner, parent, false)
-                        );
+                    public View onCreateItemView(ViewGroup parent) {
+                        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.vlext_section_banner,parent,false);
+                        AutoLooperBanner autoLooperBanner =
+                                (AutoLooperBanner) viewGroup.findViewById(R.id.vlext_banner);
+                        viewGroup.removeView(autoLooperBanner);
+                        return autoLooperBanner;
                     }
 
                     @Override
-                    protected AutoLooperBanner.OnBannerItemClickListener newItemEventListener(final List<String> datas) {
+                    protected AutoLooperBanner.OnBannerItemClickListener getBannerItemClickListener(List<String> datas) {
                         return new AutoLooperBanner.OnBannerItemClickListener() {
                             @Override
                             public void onItemClick(int position) {
-                                Log.d("lmsg", "click:" + position + "\r\nurl:" + datas.get(position));
+                               final String msg = "click:" + position + "\r\nurl:" +
+                                        getItemDataByPosition(position);
+                                Log.d("lmsg", msg);
+                                Toast.makeText(TestVLayoutComplex.this,msg,Toast.LENGTH_SHORT).show();
                             }
                         };
-                    }
-
-                    @Override
-                    protected void onBindViewHolder(BannerSectionViewHolder holder) {
-                        super.onBindViewHolder(holder);
-                        holder.update(iBannerUpdate, getSectionData());
                     }
                 };
         return section;
     }
 
-    private ListSection<LinearViewHolderSample,
-            Data1,
-            LinearViewHolderSample.IEventListener>
-    newListSection(List<Data1> datas) {
-
-
-        ListSection<LinearViewHolderSample,
-                Data1,
+    private ListSection<LinearViewHolderSample, Data1,
+            LinearViewHolderSample.IEventListener> newListSection(List<Data1> datas) {
+        ListSection<LinearViewHolderSample, Data1,
                 LinearViewHolderSample.IEventListener> listSection =
                 new ListSection<LinearViewHolderSample,
                         Data1,
                         LinearViewHolderSample.IEventListener>(datas) {
 
                     @Override
-                    protected LinearViewHolderSample.IEventListener newItemEventListener(final Data1 itemData, final int position) {
-                        return new LinearViewHolderSample.IEventListener() {
-
-                            @Override
-                            public void onAvatarClick() {
-                                Toast.makeText(TestVLayoutComplex.this, "avatar", Toast.LENGTH_SHORT).show();
-                                itemData.setTitle("changed title");
-                                getAdapter().notifyItemChanged(position);
-                            }
-                        };
+                    public void onBindViewHolder(LinearViewHolderSample holder,
+                                                 int position, Data1 itemData) {
+                        VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        holder.itemView.setLayoutParams(layoutParams);
+                        holder.update(itemData);
                     }
+
+                    @Override
+                    public LinearViewHolderSample onCompatCreateViewHolder(View contentView,
+                                                                           View originView,
+                                                                           int viewType) {
+                        return new LinearViewHolderSample(contentView);
+                    }
+
+                    @Override
+                    public View onCreateItemView(ViewGroup parent, int viewType) {
+                        return LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.vlayout_item_linear, parent, false);
+                    }
+
+                    private LinearViewHolderSample.IEventListener listener;
+
+                    @Override
+                    public LinearViewHolderSample.IEventListener getItemEventListener() {
+                        if (listener == null) {
+                            listener = new LinearViewHolderSample.IEventListener() {
+
+                                @Override
+                                public void onAvatarClick(int position) {
+                                    Toast.makeText(TestVLayoutComplex.this, "avatar", Toast.LENGTH_SHORT).show();
+                                    getItemDataByPosition(position).setTitle("changed title");
+                                    getAdapter().notifyItemChanged(position + recyclerView.getLHeadersCount());
+                                }
+                            };
+                        }
+                        return listener;
+                    }
+
 
                     @Override
                     protected void decorLayoutHelper(LinearLayoutHelper layoutHelper) {
@@ -298,20 +304,6 @@ public class TestVLayoutComplex extends AppCompatActivity {
                                 android.R.color.transparent));
                         //test -> useless for linear
                         layoutHelper.setItemCount(5);
-                    }
-
-                    @Override
-                    protected LinearViewHolderSample onCreateViewHolder(ViewGroup parent, int viewType) {
-                        return new LinearViewHolderSample(LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.vlayout_item_linear, parent, false));
-                    }
-
-                    @Override
-                    protected void onBindViewHolder(LinearViewHolderSample holder, int position, Data1 itemData) {
-                        VirtualLayoutManager.LayoutParams layoutParams = new VirtualLayoutManager.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        holder.itemView.setLayoutParams(layoutParams);
-                        holder.update(itemData);
                     }
                 };
         return listSection;
