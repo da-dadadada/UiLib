@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import individual.leobert.sample_lrecyclerview.LRecyclerViewSamples;
+
 public class TestListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static SparseArray<Class> testPool = new SparseArray<>();
@@ -24,6 +26,7 @@ public class TestListActivity extends AppCompatActivity implements View.OnClickL
         testPool.put(R.id.test_nine_img,TestNineImage.class);
         testPool.put(R.id.test_guide,GuideActivity.class);
         testPool.put(R.id.test_arc,TestArcMenu.class);
+        testPool.put(R.id.test_lrecyclerview, LRecyclerViewSamples.class);
     }
 
 

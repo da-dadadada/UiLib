@@ -1,11 +1,9 @@
 package individual.leobert.uilib.lrecyclerview.swipe;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import java.util.List;
 
@@ -13,7 +11,7 @@ import individual.leobert.uilib.lrecyclerview.LRecyclerView;
 import individual.leobert.uilib.lrecyclerview.R;
 
 /**
- * <p><b>Package:</b> individual.leobert.uilib.temp </p>
+ * <p><b>Package:</b> individual.leobert.uilib.lrecyclerview.swipe </p>
  * <p><b>Project:</b> UiLib </p>
  * <p><b>Classname:</b> SwipeMenuAdapterHelper </p>
  * <p><b>Description:</b> TODO </p>
@@ -90,7 +88,7 @@ public class SwipeMenuAdapterHelper {
     }
 
 
-    public final void heloOnBindViewHolder(RecyclerView.ViewHolder holder, int position,
+    public final void helpOnBindViewHolder(RecyclerView.ViewHolder holder, int position,
                                            List<Object> payloads) {
         View itemView = holder.itemView;
         if (itemView instanceof SwipeMenuLayout) {

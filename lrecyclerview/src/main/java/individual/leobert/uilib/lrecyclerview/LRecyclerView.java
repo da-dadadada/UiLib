@@ -89,7 +89,9 @@ public class LRecyclerView extends RecyclerView {
 
     private boolean allowSwipeDelete = false;
 
+    @Deprecated
     private SwipeMenuCreator mSwipeMenuCreator;
+    @Deprecated
     private OnSwipeMenuItemClickListener mSwipeMenuItemClickListener;
     private DefaultItemTouchHelper mDefaultItemTouchHelper;
 
@@ -924,6 +926,7 @@ public class LRecyclerView extends RecyclerView {
      *
      * @param swipeMenuCreator listener.
      */
+    @Deprecated
     public void setSwipeMenuCreator(SwipeMenuCreator swipeMenuCreator) {
         this.mSwipeMenuCreator = swipeMenuCreator;
     }
@@ -933,6 +936,7 @@ public class LRecyclerView extends RecyclerView {
      *
      * @param swipeMenuItemClickListener listener.
      */
+    @Deprecated
     public void setSwipeMenuItemClickListener(OnSwipeMenuItemClickListener swipeMenuItemClickListener) {
         this.mSwipeMenuItemClickListener = swipeMenuItemClickListener;
     }
