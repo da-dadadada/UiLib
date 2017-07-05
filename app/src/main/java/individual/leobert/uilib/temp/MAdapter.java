@@ -44,7 +44,7 @@ public class MAdapter<VH extends EventViewHolder, ID, IEL>
     @Override
     public void onBindViewHolder(VH holder, int position) {
         if (swipeMenuAdapterHelper != null)
-            swipeMenuAdapterHelper.heloOnBindViewHolder(holder, position, null);
+            swipeMenuAdapterHelper.helpOnBindViewHolder(holder, position, null);
         super.onBindViewHolder(holder, position);
     }
 
