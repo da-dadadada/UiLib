@@ -47,8 +47,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import individual.leobert.uilib.lrecyclerview.swipe.OnSwipeMenuItemClickListener;
-import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenuCreator;
 import individual.leobert.uilib.lrecyclerview.swipe.SwipeMenuLayout;
 import individual.leobert.uilib.lrecyclerview.swipe.touch.DefaultItemTouchHelper;
 import individual.leobert.uilib.lrecyclerview.swipe.touch.OnItemMoveListener;
@@ -940,7 +938,7 @@ public class LRecyclerView extends RecyclerView {
         initializeItemTouchHelper();
         mDefaultItemTouchHelper.startSwipe(viewHolder);
     }
-    
+
     /**
      * open menu on left.
      *

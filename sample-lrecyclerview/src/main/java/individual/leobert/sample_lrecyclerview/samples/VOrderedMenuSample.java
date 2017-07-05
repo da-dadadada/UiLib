@@ -140,7 +140,13 @@ public class VOrderedMenuSample extends SimpleLRecyclerViewActivity {
     protected void setup(LRecyclerView lRecyclerView) {
         this.lRecyclerView = lRecyclerView;
 
+//        LinearLayoutManager test = new LinearLayoutManager(getContext(),
+//                LinearLayoutManager.HORIZONTAL,false);
+
         lRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+//        //override
+//        lRecyclerView.setLayoutManager(test);
 
         MAdapter mAdapter = new MAdapter(genData("item",10,MODE_APPEND));
 

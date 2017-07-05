@@ -43,7 +43,7 @@ public class SwipeMenuView extends LinearLayout {
 
     private SwipeSwitch mSwipeSwitch;
 
-    private RecyclerView.ViewHolder mAdapterVIewHolder;
+    private RecyclerView.ViewHolder mAdapterViewHolder;
 
     private int mDirection;
 
@@ -76,8 +76,8 @@ public class SwipeMenuView extends LinearLayout {
         this.mSwipeSwitch = swipeSwitch;
     }
 
-    public void bindAdapterViewHolder(RecyclerView.ViewHolder adapterVIewHolder) {
-        this.mAdapterVIewHolder = adapterVIewHolder;
+    public void bindAdapterViewHolder(RecyclerView.ViewHolder adapterViewHolder) {
+        this.mAdapterViewHolder = adapterViewHolder;
     }
 
     private void addItem(SwipeMenuItem item, int index) {
@@ -128,7 +128,7 @@ public class SwipeMenuView extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null && mSwipeSwitch != null && mSwipeSwitch.isMenuOpen()) {
-                mItemClickListener.onItemClick(mSwipeSwitch, mAdapterVIewHolder.getAdapterPosition(), v.getId(), mDirection);
+                mItemClickListener.onItemClick(mSwipeSwitch, mAdapterViewHolder.getAdapterPosition(), v.getId(), mDirection);
             }
         }
     };
