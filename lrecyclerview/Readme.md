@@ -1,4 +1,7 @@
 # LRecyclerView
+
+{I'm sorry to notify you with this message: "some issues about Tag-Alliance make the wrong render of this page, try MacDown to have a nice reading experience."}
+
 ## summary
 LRecyclerView is an extended RecyclerView works on Android. With this library, we can easily use "pull to refresh on start","auto load on end" and “swipe menu for items”
 
@@ -74,8 +77,7 @@ repositories {
 * [drag to sort](#b7)
 
 
-
-
+--
 
 <span id = "b1">
 ### pull-to-refresh
