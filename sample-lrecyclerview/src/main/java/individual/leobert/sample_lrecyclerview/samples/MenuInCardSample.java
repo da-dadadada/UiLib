@@ -26,8 +26,6 @@ package individual.leobert.sample_lrecyclerview.samples;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,7 +36,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import individual.leobert.sample_lrecyclerview.R;
-import individual.leobert.sample_lrecyclerview.SimpleAdapter;
 import individual.leobert.sample_lrecyclerview.SimpleLRecyclerViewActivity;
 import individual.leobert.uilib.lrecyclerview.LRecyclerView;
 import individual.leobert.uilib.lrecyclerview.swipe.Closeable;
